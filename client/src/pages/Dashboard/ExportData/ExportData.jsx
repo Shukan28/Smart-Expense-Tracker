@@ -1,5 +1,5 @@
 import React from "react";
-import jsPDF from "jspdf";
+import {jsPDF} from "jspdf";
 import * as XLSX from "xlsx";
 import autoTable from "jspdf-autotable";
 import "./ExportData.css"
