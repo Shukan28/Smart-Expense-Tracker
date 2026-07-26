@@ -1,0 +1,76 @@
+.AI-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 200px;
+}
+
+.AI-form {
+    width: 100%;
+    max-width: 550px;
+    margin-bottom: 20px;
+    background: #0F172A;
+    color: #06B6D4;
+    border: 2px solid #0F172A;
+    border-radius: 25px;
+    padding: 50px;
+    margin-bottom: 60px;
+}
+
+.AI-form h2 {
+    margin-bottom: 40px;
+    text-align: center;
+    font-size: 38px;
+}
+
+.AI-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.AI-fields label {
+    margin-bottom: 8px;
+}
+
+.AI-fields input,
+.AI-fields select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.AI-form button {
+    width: 40%;
+    padding: 12px;
+    margin-top: 30px;
+    background: linear-gradient(135deg, #7C3AED, #8B5CF6);
+    color: #F8FAFC;
+    border: 2px solid #7C3AED;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.AI-form button:hover {
+    background: #0F172A;
+    color: #06B6D4;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(124,58,237,.45);
+}
+
+.AI-button {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border: 2px solid #7C3AED;
+    box-shadow: 0 0 6px #7C3AED;
+}

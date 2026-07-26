@@ -1,122 +1,167 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+
+import Dashboard from "./pages/Dashboard/Dashboard";
+import AddExpense from "./pages/Dashboard/AddExpense/AddExpense";
+import ExpenseHistory from "./pages/Dashboard/ExpenseHistory/ExpenseHistory";
+import AddIncome from "./pages/Dashboard/Income/AddIncome"
+import IncomeHistory from "./pages/Dashboard/Income/IncomeHistory"
+import AddBudget from "./pages/Dashboard/Budget/AddBudget";
+import BudgetHistory from "./pages/Dashboard/Budget/BudgetHistory"
+import ExportData from "./pages/Dashboard/ExportData/ExportData";
+import Analytics from "./pages/Dashboard/Analytics/Analytics";
+import Settings from "./pages/Dashboard/Settings/Settings";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [expenses, setExpenses] = useState(() => {
+    const savedExpenses = localStorage.getItem("expenses");
+    return savedExpenses ? JSON.parse(savedExpenses) : [];
+  });
+
+  const [incomes, setIncomes] = useState(() => {
+    const savedIncome = localStorage.getItem("income");
+    return savedIncome ? JSON.parse(savedIncome) : [];
+  });
+
+  const [budgets, setBudgets] = useState(() => {
+    const savedBudgets = localStorage.getItem("budgets");
+    return savedBudgets ? JSON.parse(savedBudgets) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      "expenses",
+      JSON.stringify(expenses)
+    );
+  }, [expenses]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "income",
+      JSON.stringify(incomes)
+    );
+  }, [incomes]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "budgets",
+      JSON.stringify(budgets)
+    );
+  }, [budgets]);
+
+  console.log("App expenses:", expenses);
+
+  const [editExpense, setEditExpense] = useState(null);
+  const [editIncome, setEditIncome] = useState(null);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <BrowserRouter>
+      <Header />
+      <Routes>
 
-      <div className="ticks"></div>
+        <Route path="/" element={<Navigate to="/register" replace />} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard expenses={expenses}
+          incomes={incomes}
+          budgets={budgets} />} />
+        <Route
+          path="/addexpense"
+          element={
+            <AddExpense
+              expenses={expenses}
+              setExpenses={setExpenses}
+              editExpense={editExpense}
+              setEditExpense={setEditExpense} />} />
+        <Route
+          path="/expensehistory"
+          element={
+            <ExpenseHistory
+              expenses={expenses}
+              setExpenses={setExpenses}
+              setEditExpense={setEditExpense} />} />
+        <Route
+          path="/addincome"
+          element={
+            <AddIncome
+              incomes={incomes}
+              setIncomes={setIncomes}
+              editIncome={editIncome}
+              setEditIncome={setEditIncome}
+            />
+          }
+        />
+        <Route
+          path="/incomehistory"
+          element={
+            <IncomeHistory
+              incomes={incomes}
+              setIncomes={setIncomes}
+              setEditIncome={setEditIncome}
+            />
+          }
+        />
+        <Route
+          path="/addbudget"
+          element={
+            <AddBudget
+              budgets={budgets}
+              setBudgets={setBudgets}
+            />
+          }
+        />
+        <Route
+          path="/budgethistory"
+          element={
+            <BudgetHistory
+              budgets={budgets}
+              setBudgets={setBudgets}
+              expenses={expenses}
+            />
+          }
+        />
+        <Route
+          path="/exportdata"
+          element={
+            <ExportData
+              expenses={expenses}
+              incomes={incomes}
+              budgets={budgets}
+            />
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <Analytics
+              expenses={expenses}
+              incomes={incomes}
+              budgets={budgets}
+            />
+          }
+        />
+        <Route
+    path="/settings"
+    element={<Settings 
+    expenses={expenses}
+    setExpenses={setExpenses}
+              incomes={incomes}
+              setIncomes={setIncomes}
+              budgets={budgets}
+              setBudgets={setBudgets}
+              />}
+/>
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

@@ -1,0 +1,25 @@
+.footer-top {
+  background-color: #1E293B;
+  color: #06B6D4;
+  padding: 35px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  bottom: 50px;
+  right: 0;
+  left: 0;
+  position: static;
+}
+
+.footer-bottom {
+  background-color: #1E293B;
+  color: #06B6D4;
+  padding: 25px 40px;
+  display: flex;
+  justify-content: center;
+  right: 0;
+  left: 0;
+  padding-bottom: 50px;
+  position: static;
+  align-items: center;
+}

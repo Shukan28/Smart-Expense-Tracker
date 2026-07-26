@@ -1,0 +1,59 @@
+.ED-container {
+    padding-top: 200px;
+    padding-bottom: 40px;
+}
+.ED-cards {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:30px;
+    width:60%;
+    margin:40px auto;
+}
+.ED-card {
+    background-color: #334155;
+    color: #cabcbc;
+    margin-left: 50px;
+    margin-top: 10px;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+.ED-card:nth-child(3), .ED-card:last-child {
+    margin-top: 30px;
+}
+.ED-buttons{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+}
+.ED-card p {
+    margin-top: 20px;
+}
+.ED-card button {
+    margin-top: 20px;
+}
+.ED-container h2 {
+    text-align: center;
+    font-size: 40px;
+    padding-left: 45px;
+}
+.ED-card h3 {
+    margin-right: 15px;
+    margin-left: 0;
+    font-size: 28px;
+}
+.export-btn{
+    background-color:#059669;
+    color: #cabcbc;
+    border:2px solid #cabcbc;
+    padding:10px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.export-btn:hover{
+    background-color:#334155;
+    color: #FFF;
+}

@@ -1,0 +1,124 @@
+.reg-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 80px;
+    min-height: 80vh;
+}
+
+.reg-left {
+    flex: 1;
+    max-width: 45%;
+    padding-top: 190px;
+    padding-left: 80px;
+}
+
+.reg-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 55%;
+    padding-top: 161px;
+}
+
+.reg-left h2 {
+    margin-bottom: 20px;
+}
+
+.reg-left h3 {
+    margin-left: 0;
+}
+
+.reg-card {
+    background-color: #0F172A;
+    color: #06B6D4;
+    padding: 15px 50px;
+    border-radius: 20px;
+    width: 420px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.reg-card p {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.reg-card h2 {
+    width: 70%;
+    margin: 5px auto 0;
+    margin-bottom: 20px;
+    border: 2px solid #7C3AED;
+    border-radius: 15px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    margin-bottom: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2px;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    padding: 8px 6px;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    width: 50%;
+    margin: 2px auto 0;
+    background: linear-gradient(135deg, #7C3AED, #8B5CF6);
+    color: #F8FAFC;
+    border: 2px solid #7C3AED;
+    padding: 10px 12px;
+    border-radius: 20px;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.button:hover {
+    background-color: #0F172A;
+    color: #06B6D4;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(124, 58, 237, .45);
+}
+
+.login-nav {
+    flex: 1;
+    text-decoration: none;
+    color: #7C3AED;
+    font-weight: 700;
+}
+
+.login-nav:hover {
+    text-decoration: underline;
+}
+
+.reg-left ul {
+    list-style-image: url('../tick.png');
+    padding: 20px;
+    margin-left: 50px;
+    margin-top: 20px;
+}
+
+.reg-left ul li {
+    margin-bottom: 5px;
+}
+
+.reg-left h3 {
+    margin-top: 20px;
+}
