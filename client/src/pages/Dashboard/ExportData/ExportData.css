@@ -57,3 +57,73 @@
     background-color:#334155;
     color: #FFF;
 }
+@media (max-width:1200px){
+
+.ED-container{
+    padding-inline:20px;
+}
+
+.ED-cards{
+    width:90%;
+    margin:auto;
+}
+
+.ED-card{
+    margin-left:0;
+}
+
+}
+@media (max-width:900px){
+
+.ED-container{
+    padding-top:120px;
+}
+
+.ED-cards{
+    width:100%;
+    grid-template-columns:1fr;
+    gap:25px;
+}
+
+.ED-card{
+    margin:0;
+    padding:35px;
+}
+
+.ED-buttons{
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+}
+@media (max-width:600px){
+
+.ED-container{
+    padding-top:70px;
+    padding-inline:15px;
+}
+
+.ED-container h2{
+    font-size:30px;
+    padding-left:0;
+}
+
+.ED-card{
+    padding:25px;
+}
+
+.ED-card h3{
+    font-size:24px;
+    margin:0;
+}
+
+.ED-buttons{
+    flex-direction:column;
+    gap:12px;
+}
+
+.export-btn{
+    width:100%;
+}
+
+}

@@ -139,3 +139,89 @@ th {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(124, 58, 237, .45);
 }
+@media (max-width:1200px){
+
+.EH-container{
+    padding-inline:20px;
+}
+
+.EH-table{
+    overflow-x:auto;
+}
+
+table{
+    min-width:900px;
+}
+
+.nav-addExpense{
+    width:250px;
+}
+
+}
+@media (max-width:768px){
+
+.EH-container{
+    padding-top:120px;
+}
+
+.filters{
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.filters input,
+.filters select{
+    width:300px;
+}
+
+.EH-table{
+    justify-content:flex-start;
+    overflow-x:auto;
+}
+
+table{
+    min-width:900px;
+}
+
+.nav-addExpense{
+    width:220px;
+}
+
+}
+@media (max-width:600px){
+
+.EH-container{
+    padding-top:70px;
+    padding-inline:15px;
+}
+
+.EH-container h2{
+    font-size:30px;
+}
+
+.filters{
+    flex-direction:column;
+    gap:15px;
+}
+
+.filters input,
+.filters select{
+    width:100%;
+    max-width:100%;
+}
+
+.edit-btn,
+.delete-btn{
+    padding:8px 12px;
+    font-size:14px;
+}
+
+.nav-addExpense{
+    width:100%;
+}
+
+.total{
+    font-size:18px;
+}
+
+}

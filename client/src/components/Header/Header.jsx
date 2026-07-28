@@ -1,11 +1,14 @@
 import "./Header.css";
+import React from "react";
+import { NavLink } from "react-router-dom";
+
 function Header() {
     return (
         <header className="header">
             <h1>💰 Smart Expense Tracker</h1>
             <section className="link">
-                <a href="#login" className="login-btn">Login</a>
-                <a href="#register" className="register-btn">Register</a>
+                <NavLink className="login-btn" to="/login">Login</NavLink>
+                <NavLink className="register-btn" to="/register">Register</NavLink>
             </section>
         </header>
     );

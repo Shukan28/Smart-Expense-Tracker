@@ -128,3 +128,111 @@
 .RI ul li:last-child {
     margin-bottom: 30px;
 }
+@media (max-width:1200px){
+
+.Ana-Pie{
+    width:42%;
+    margin-left:5%;
+}
+
+.Ana-bar{
+    width:50%;
+    margin-right:5%;
+}
+
+.Ana-sec1{
+    width:100%;
+    margin-left:0;
+}
+
+}
+@media (max-width:900px){
+
+.Ana-container{
+    padding-top:120px;
+    padding-inline:20px;
+}
+
+.Ana-sec1{
+    flex-wrap:wrap;
+    width:100%;
+    margin:30px auto;
+    gap:25px;
+}
+
+.Ana-card1-1,
+.Ana-card1-2,
+.Ana-card1-3{
+    width:280px;
+}
+
+.Ana-sec2{
+    flex-direction:column;
+}
+
+.Ana-Pie,
+.Ana-bar{
+    width:100%;
+    max-width:650px;
+    margin:0;
+}
+
+.Ana-sec3{
+    flex-direction:column;
+    gap:30px;
+}
+
+.HSC,
+.RI{
+    width:100%;
+    max-width:650px;
+}
+
+}
+@media (max-width:600px){
+
+.Ana-container{
+
+    padding-top:70px;
+
+}
+
+.Ana-container h2{
+
+    font-size:2rem;
+
+}
+
+.Ana-sec1{
+
+    flex-direction:column;
+
+}
+
+.Ana-card1-1,
+.Ana-card1-2,
+.Ana-card1-3{
+
+    width:100%;
+
+}
+
+.Ana-Pie,
+.Ana-bar,
+.HSC,
+.RI{
+
+    width:100%;
+
+    padding:20px;
+
+}
+
+.HSC h3,
+.RI h3{
+
+    font-size:22px;
+
+}
+
+}

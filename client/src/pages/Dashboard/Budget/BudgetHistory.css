@@ -125,3 +125,106 @@ th {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(124, 58, 237, .45);
 }
+@media (max-width:1200px){
+
+.BH-container{
+    padding-inline:20px;
+}
+
+.BH-table{
+    overflow-x:auto;
+}
+
+table{
+    min-width:900px;
+}
+
+.nav-addBudget{
+    width:250px;
+}
+
+}
+@media (max-width:768px){
+
+.BH-container{
+
+    padding-top:120px;
+
+}
+
+.BH-filters{
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+.BH-filters input{
+
+    width:100%;
+
+    max-width:350px;
+
+}
+
+.BH-table{
+
+    overflow-x:auto;
+
+    justify-content:flex-start;
+
+}
+
+table{
+
+    min-width:850px;
+
+}
+
+.nav-addBudget{
+
+    width:220px;
+
+}
+
+}
+@media (max-width:600px){
+
+.BH-container{
+
+    padding-top:70px;
+
+    padding-inline:15px;
+
+}
+
+.BH-container h2{
+
+    font-size:30px;
+
+}
+
+.BH-filters input{
+
+    max-width:100%;
+
+}
+
+.BH-edit-btn,
+
+.BH-delete-btn{
+
+    padding:8px 12px;
+
+    font-size:14px;
+
+}
+
+.nav-addBudget{
+
+    width:100%;
+
+}
+
+}
