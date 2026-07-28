@@ -10,7 +10,7 @@
   top: 0;
   left: 0;
   right: 0;
-    z-index: 1000;
+  z-index: 1000;
 }
 
 .link {
@@ -21,6 +21,7 @@
 h1 {
   margin-bottom: 20px;
 }
+
 .login-btn {
   text-decoration: none;
   background-color: #222;
@@ -34,8 +35,8 @@ h1 {
 .register-btn {
   text-decoration: none;
   background: linear-gradient(135deg, #7C3AED, #8B5CF6);
-    color: #F8FAFC;
-    border: 2px solid #391a6f;
+  color: #F8FAFC;
+  border: 2px solid #391a6f;
   padding: 10px 18px;
   border-radius: 20px;
   transition: 0.3s;
@@ -45,12 +46,33 @@ h1 {
   background-color: #1E293B;
   color: #fff;
   transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(56, 30, 99, 0.45);
+  box-shadow: 0 10px 25px rgba(56, 30, 99, 0.45);
 }
 
 .register-btn:hover {
   background: #0F172A;
-    color: #06B6D4;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(124,58,237,.45);
+  color: #06B6D4;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(124, 58, 237, .45);
+}
+
+@media (max-width: 768px) {
+
+  .header {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 2rem;
+  }
+
+  .nav {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
 }

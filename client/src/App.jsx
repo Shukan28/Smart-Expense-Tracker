@@ -63,102 +63,104 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <Routes>
+      <main>
+        <Routes>
 
-        <Route path="/" element={<Navigate to="/register" replace />} />
+          <Route path="/" element={<Navigate to="/register" replace />} />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard expenses={expenses}
-          incomes={incomes}
-          budgets={budgets} />} />
-        <Route
-          path="/addexpense"
-          element={
-            <AddExpense
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard expenses={expenses}
+            incomes={incomes}
+            budgets={budgets} />} />
+          <Route
+            path="/addexpense"
+            element={
+              <AddExpense
+                expenses={expenses}
+                setExpenses={setExpenses}
+                editExpense={editExpense}
+                setEditExpense={setEditExpense} />} />
+          <Route
+            path="/expensehistory"
+            element={
+              <ExpenseHistory
+                expenses={expenses}
+                setExpenses={setExpenses}
+                setEditExpense={setEditExpense} />} />
+          <Route
+            path="/addincome"
+            element={
+              <AddIncome
+                incomes={incomes}
+                setIncomes={setIncomes}
+                editIncome={editIncome}
+                setEditIncome={setEditIncome}
+              />
+            }
+          />
+          <Route
+            path="/incomehistory"
+            element={
+              <IncomeHistory
+                incomes={incomes}
+                setIncomes={setIncomes}
+                setEditIncome={setEditIncome}
+              />
+            }
+          />
+          <Route
+            path="/addbudget"
+            element={
+              <AddBudget
+                budgets={budgets}
+                setBudgets={setBudgets}
+              />
+            }
+          />
+          <Route
+            path="/budgethistory"
+            element={
+              <BudgetHistory
+                budgets={budgets}
+                setBudgets={setBudgets}
+                expenses={expenses}
+              />
+            }
+          />
+          <Route
+            path="/exportdata"
+            element={
+              <ExportData
+                expenses={expenses}
+                incomes={incomes}
+                budgets={budgets}
+              />
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <Analytics
+                expenses={expenses}
+                incomes={incomes}
+                budgets={budgets}
+              />
+            }
+          />
+          <Route
+            path="/settings"
+            element={<Settings
               expenses={expenses}
               setExpenses={setExpenses}
-              editExpense={editExpense}
-              setEditExpense={setEditExpense} />} />
-        <Route
-          path="/expensehistory"
-          element={
-            <ExpenseHistory
-              expenses={expenses}
-              setExpenses={setExpenses}
-              setEditExpense={setEditExpense} />} />
-        <Route
-          path="/addincome"
-          element={
-            <AddIncome
-              incomes={incomes}
-              setIncomes={setIncomes}
-              editIncome={editIncome}
-              setEditIncome={setEditIncome}
-            />
-          }
-        />
-        <Route
-          path="/incomehistory"
-          element={
-            <IncomeHistory
-              incomes={incomes}
-              setIncomes={setIncomes}
-              setEditIncome={setEditIncome}
-            />
-          }
-        />
-        <Route
-          path="/addbudget"
-          element={
-            <AddBudget
-              budgets={budgets}
-              setBudgets={setBudgets}
-            />
-          }
-        />
-        <Route
-          path="/budgethistory"
-          element={
-            <BudgetHistory
-              budgets={budgets}
-              setBudgets={setBudgets}
-              expenses={expenses}
-            />
-          }
-        />
-        <Route
-          path="/exportdata"
-          element={
-            <ExportData
-              expenses={expenses}
-              incomes={incomes}
-              budgets={budgets}
-            />
-          }
-        />
-        <Route
-          path="/analytics"
-          element={
-            <Analytics
-              expenses={expenses}
-              incomes={incomes}
-              budgets={budgets}
-            />
-          }
-        />
-        <Route
-    path="/settings"
-    element={<Settings 
-    expenses={expenses}
-    setExpenses={setExpenses}
               incomes={incomes}
               setIncomes={setIncomes}
               budgets={budgets}
               setBudgets={setBudgets}
-              />}
-/>
-      </Routes>
+            />}
+          />
+        </Routes>
+      </main>
       <Footer />
     </BrowserRouter>
   );
