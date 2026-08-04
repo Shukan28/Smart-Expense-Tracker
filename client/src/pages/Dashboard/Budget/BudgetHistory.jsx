@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import API from "../../../services/api";
 import "./BudgetHistory.css"
 
@@ -10,40 +9,42 @@ function BudgetHistory() {
     const [budgets, setBudgets] = useState([]);
     const [expenses, setExpenses] = useState([]);
     const [search, setSearch] = useState("");
+    const currency = localStorage.getItem("currency") || "INR";
 
-    const fetchExpenses = async () => {
+    const currencySymbols = {
+        INR: "₹",
+        USD: "$",
+        EUR: "€",
+        GBP: "£",
+        JPY: "¥",
+        AUD: "A$",
+        CAD: "C$",
+    };
+
+    const fetchData = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await API.get("/expenses", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setExpenses(response.data.expenses);
+
+            const headers = {
+                Authorization: `Bearer ${token}`,
+            };
+
+            const [expenseResponse, budgetResponse] =
+                await Promise.all([
+                    API.get("/expenses", { headers }),
+                    API.get("/budget", { headers }),
+                ]);
+
+            setExpenses(expenseResponse.data.expenses);
+            setBudgets(budgetResponse.data.budgets);
+
         } catch (error) {
             console.error(error);
+            alert("Failed to load data.");
         }
     };
 
-    const fetchBudgets = async () => {
-    try {
-        const token = localStorage.getItem("token");
-        const response = await API.get("/budget", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        setBudgets(response.data.budgets);
-    } catch (error) {
-        console.error(error);
-        alert("Failed to fetch budgets.");
-    }
-};
-
-    useEffect(() => {
-        fetchExpenses();
-        fetchBudgets();
-    }, []);
+    useEffect(() => { fetchData(); }, []);
 
     const filteredBudget = budgets.filter((item) => {
         const matchesSearch =
@@ -53,26 +54,27 @@ function BudgetHistory() {
         return matchesSearch
     });
 
-   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this budget?")) return;
-    try {
-        const token = localStorage.getItem("token");
-        await API.delete(`/budget/${id}`, {
-            headers: {
+    const handleDelete = async (id) => {
+        if (!window.confirm("Delete this budget?")) return;
+        try {
+            const token = localStorage.getItem("token");
+            const headers = {
                 Authorization: `Bearer ${token}`,
-            },
-        });
-        fetchBudgets();
-        alert("Budget deleted successfully.");
-    } catch (error) {
-        console.error(error);
-        if (error.response) {
-            alert(error.response.data.message);
-        } else {
-            alert("Unable to delete budget.");
+            };
+            await API.delete(`/budget/${id}`,
+                { headers }
+            );
+            fetchData();
+            alert("Budget deleted successfully.");
+        } catch (error) {
+            console.error(error);
+            if (error.response?.data?.message) {
+                alert(error.response.data.message);
+            } else {
+                alert("Unable to delete budget.");
+            }
         }
-    }
-};
+    };
 
     return (
         <section className="BH-container">
@@ -97,7 +99,7 @@ function BudgetHistory() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredBudget.map((item, index) => {
+                        {filteredBudget.map((item) => {
                             const spent = expenses
                                 .filter(expense => expense.category === item.category)
                                 .reduce((total, expense) => total + Number(expense.amount), 0);
@@ -106,9 +108,9 @@ function BudgetHistory() {
                                 <tr key={item._id}>
                                     <td>{item.month} {item.year}</td>
                                     <td>{item.category}</td>
-                                    <td>₹{item.amount}</td>
-                                    <td>₹{spent}</td>
-                                    <td>₹{remaining}</td>
+                                    <td>{currencySymbols[currency]}{item.amount}</td>
+                                    <td>{currencySymbols[currency]}{spent}</td>
+                                    <td>{currencySymbols[currency]}{remaining}</td>
                                     <td>{remaining >= 0 ? "🟢" : "🔴"}</td>
                                     <td><button className="BH-edit-btn" onClick={() =>
                                         navigate("/addbudget",

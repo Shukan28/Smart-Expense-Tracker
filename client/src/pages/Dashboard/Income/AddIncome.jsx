@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import API from "../../../services/api";
 import "./AddIncome.css"
 
@@ -9,6 +7,18 @@ function AddIncome() {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const currency = localStorage.getItem("currency") || "INR";
+
+    const currencySymbols = {
+        INR: "₹",
+        USD: "$",
+        EUR: "€",
+        GBP: "£",
+        JPY: "¥",
+        AUD: "A$",
+        CAD: "C$",
+    };
 
     const [income, setIncome] = useState({
         _id: "",
@@ -19,17 +29,17 @@ function AddIncome() {
     });
 
     useEffect(() => {
-    if (location.state?.income) {
-        const item = location.state.income;
-        setIncome({
-            _id: item._id,
-            type: item.type,
-            source: item.source,
-            salary: item.salary,
-            date: item.date ? item.date.split("T")[0] : "",
-        });
-    }
-}, [location.state]);
+        if (location.state?.income) {
+            const item = location.state.income;
+            setIncome({
+                _id: item._id,
+                type: item.type,
+                source: item.source,
+                salary: item.salary,
+                date: item.date ? item.date.split("T")[0] : "",
+            });
+        }
+    }, [location.state]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -48,59 +58,54 @@ function AddIncome() {
     };
 
     const handleSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
-    try {
-        let response;
-        if (location.state?.income) {
-            response = await API.put(
-                `/income/${income._id}`,
-                {
-                    type: income.type,
-                    source: income.source,
-                    salary: Number(income.salary),
-                    date: income.date,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-        } else {
-            response = await API.post(
-                "/income",
-                {
-                    type: income.type,
-                    source: income.source,
-                    salary: Number(income.salary),
-                    date: income.date,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        };
+        const incomeData = {
+            type: income.type,
+            source: income.source,
+            salary: Number(income.salary),
+            date: income.date,
+        };
+
+        setLoading(true);
+
+        try {
+            let response;
+            if (location.state?.income) {
+                response = await API.put(
+                    `/income/${income._id}`,
+                    incomeData,
+                    { headers }
+                );
+            } else {
+                response = await API.post(
+                    "/income",
+                    incomeData,
+                    { headers }
+                );
+            }
+            alert(response.data.message);
+            setIncome({
+                _id: "",
+                type: "",
+                source: "",
+                salary: "",
+                date: "",
+            });
+            navigate("/incomehistory", { replace: true });
+        } catch (error) {
+            console.error(error);
+            if (error.response?.data?.message) {
+                alert(error.response.data.message);
+            } else {
+                alert("Unable to connect to server.");
+            }
         }
-        alert(response.data.message);
-        setIncome({
-            _id: "",
-            type: "",
-            source: "",
-            salary: "",
-            date: "",
-        });
-        navigate("/incomehistory", { replace: true });
-    } catch (error) {
-        console.error(error);
-        if (error.response) {
-            alert(error.response.data.message);
-        } else {
-            alert("Unable to connect to server.");
-        }
-    }
-};
+        finally { setLoading(false); }
+    };
 
     return (
         <section className="AI-container">
@@ -112,7 +117,9 @@ function AddIncome() {
                         <select
                             name="type"
                             value={income.type}
-                            onChange={handleChange} >
+                            onChange={handleChange}
+                            required
+                        >
                             <option value="">Select Income Type</option>
                             <option value="Job">Job</option>
                             <option value="Business">Business</option>
@@ -208,7 +215,7 @@ function AddIncome() {
                             name="salary"
                             value={income.salary}
                             onChange={handleChange}
-                            placeholder="₹10,000"
+                            placeholder="10000"
                             min="1"
                             required
                         />
@@ -224,7 +231,18 @@ function AddIncome() {
                         />
                     </div>
                     <div className="AI-button">
-                        <button type="submit">{location.state?.income ? "Update Income" : "Add Income"}</button>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                        >
+                            {loading
+                                ? location.state?.income
+                                    ? "Updating..."
+                                    : "Adding..."
+                                : location.state?.income
+                                    ? "Update Income"
+                                    : "Add Income"}
+                        </button>
                     </div>
                 </form>
             </div>

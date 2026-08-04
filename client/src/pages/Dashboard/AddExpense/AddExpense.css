@@ -65,7 +65,7 @@
     background: #0F172A;
     color: #06B6D4;
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(124,58,237,.45);
+    box-shadow: 0 10px 25px rgba(124, 58, 237, .45);
 }
 
 .AE-button {
@@ -74,7 +74,7 @@
     margin-bottom: 20px;
 }
 
-input::placeholder, 
+input::placeholder,
 textarea::placeholder {
     color: #7b8794;
 }
@@ -86,55 +86,57 @@ textarea:focus {
     border: 2px solid #7C3AED;
     box-shadow: 0 0 6px #7C3AED;
 }
-@media (max-width:900px){
 
-.AE-container{
-    padding-top:120px;
-    padding-inline:20px;
+@media (max-width:900px) {
+
+    .AE-container {
+        padding-top: 120px;
+        padding-inline: 20px;
+    }
+
+    .AE-form {
+        width: 100%;
+        max-width: 600px;
+        padding: 40px;
+    }
+
 }
 
-.AE-form{
-    width:100%;
-    max-width:600px;
-    padding:40px;
-}
+@media (max-width:600px) {
 
-}
-@media (max-width:600px){
+    .AE-container {
+        padding-top: 70px;
+        padding-inline: 15px;
+    }
 
-.AE-container{
-    padding-top:70px;
-    padding-inline:15px;
-}
+    .AE-form {
+        width: 100%;
+        padding: 25px;
+        border-radius: 20px;
+    }
 
-.AE-form{
-    width:100%;
-    padding:25px;
-    border-radius:20px;
-}
+    .AE-form h2 {
+        font-size: 30px;
+        margin-bottom: 30px;
+    }
 
-.AE-form h2{
-    font-size:30px;
-    margin-bottom:30px;
-}
+    .fields label {
+        font-size: 15px;
+    }
 
-.fields label{
-    font-size:15px;
-}
+    .fields input,
+    .fields select,
+    .fields textarea {
+        padding: 10px;
+        font-size: 15px;
+    }
 
-.fields input,
-.fields select,
-.fields textarea{
-    padding:10px;
-    font-size:15px;
-}
+    .fields textarea {
+        min-height: 100px;
+    }
 
-.fields textarea{
-    min-height:100px;
-}
-
-.AE-form button{
-    width:100%;
-}
+    .AE-form button {
+        width: 100%;
+    }
 
 }

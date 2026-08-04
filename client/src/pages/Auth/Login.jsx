@@ -10,42 +10,42 @@ function Login() {
 
     const handleSubmit = async (e) => {
 
-    e.preventDefault();
+        e.preventDefault();
 
-    const formData = new FormData(e.target);
+        const formData = new FormData(e.target);
 
-    const email = formData.get("email");
-    const password = formData.get("password");
+        const email = formData.get("email");
+        const password = formData.get("password");
 
-    try {
+        try {
 
-        const response = await API.post("/auth/login", {
-            email,
-            password,
-        });
+            const response = await API.post("/auth/login", {
+                email,
+                password,
+            });
 
-        localStorage.setItem("token", response.data.token);
+            localStorage.setItem("token", response.data.token);
 
-        localStorage.setItem(
-            "user",
-            JSON.stringify(response.data.user)
-        );
+            localStorage.setItem(
+                "user",
+                JSON.stringify(response.data.user)
+            );
 
-        alert(response.data.message);
+            alert(response.data.message);
 
-        navigate("/dashboard");
+            navigate("/dashboard");
 
-    } catch (error) {
+        } catch (error) {
 
-        if (error.response) {
-            alert(error.response.data.message);
-        } else {
-            alert("Server not responding.");
+            if (error.response) {
+                alert(error.response.data.message);
+            } else {
+                alert("Server not responding.");
+            }
+
         }
 
-    }
-
-};
+    };
 
     return (
         <>

@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import NotFound from "./pages/NotFound";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -20,92 +19,40 @@ import Footer from "./components/Footer/Footer";
 
 function App() {
 
+  const token = localStorage.getItem("token");
+
   return (
     <BrowserRouter>
       <Header />
       <main>
         <Routes>
-
-          <Route path="/" element={<Navigate to="/register" replace />} />
+          <Route
+            path="/"
+            element={
+              <Navigate
+                to={token ? "/dashboard" : "/login"}
+                replace
+              />
+            }
+          />
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-          <Route
-            path="/addexpense"
-            element={
-              <ProtectedRoute>
-                <AddExpense />
-              </ProtectedRoute>
-            } />
-          <Route
-            path="/expensehistory"
-            element={
-              <ProtectedRoute>
-                <ExpenseHistory />
-              </ProtectedRoute>
-            } />
-          <Route
-            path="/addincome"
-            element={
-              <ProtectedRoute>
-                <AddIncome />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/incomehistory"
-            element={
-              <ProtectedRoute>
-                <IncomeHistory />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/addbudget"
-            element={
-              <ProtectedRoute>
-                <AddBudget />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/budgethistory"
-            element={
-              <ProtectedRoute>
-                <BudgetHistory />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/exportdata"
-            element={
-              <ProtectedRoute>
-                <ExportData />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/analytics"
-            element={
-              <ProtectedRoute>
-                <Analytics />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/addexpense" element={<AddExpense />} />
+            <Route path="/expensehistory" element={<ExpenseHistory />} />
+            <Route path="/addincome" element={<AddIncome />} />
+            <Route path="/incomehistory" element={<IncomeHistory />} />
+            <Route path="/addbudget" element={<AddBudget />} />
+            <Route path="/budgethistory" element={<BudgetHistory />} />
+            <Route path="/exportdata" element={<ExportData />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />

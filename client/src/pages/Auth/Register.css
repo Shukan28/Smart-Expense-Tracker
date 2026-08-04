@@ -122,93 +122,96 @@ input {
 .reg-left h3 {
     margin-top: 20px;
 }
-@media (max-width:1200px){
 
-.reg-container{
-    padding:0 40px;
-    gap:50px;
-}
+@media (max-width:1200px) {
 
-.reg-left{
-    padding-left:20px;
-}
+    .reg-container {
+        padding: 0 40px;
+        gap: 50px;
+    }
 
-.reg-card{
-    width:100%;
-    max-width:420px;
-}
+    .reg-left {
+        padding-left: 20px;
+    }
 
-}
-@media (max-width:900px){
-
-.reg-container{
-    flex-direction:column;
-    align-items:center;
-    padding:40px 25px;
-    gap:60px;
-}
-
-.reg-left,
-.reg-right{
-    max-width:100%;
-    width:100%;
-    padding-top:0;
-    padding-left:0;
-}
-
-.reg-left{
-    text-align:center;
-}
-
-.reg-left ul{
-    display:inline-block;
-    text-align:left;
-    margin:20px auto;
-    padding-left:25px;
-}
-
-.reg-card{
-    width:100%;
-    max-width:500px;
-    margin:auto;
-}
+    .reg-card {
+        width: 100%;
+        max-width: 420px;
+    }
 
 }
-@media (max-width:600px){
 
-.reg-container{
-    padding:20px;
+@media (max-width:900px) {
+
+    .reg-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 25px;
+        gap: 60px;
+    }
+
+    .reg-left,
+    .reg-right {
+        max-width: 100%;
+        width: 100%;
+        padding-top: 0;
+        padding-left: 0;
+    }
+
+    .reg-left {
+        text-align: center;
+    }
+
+    .reg-left ul {
+        display: inline-block;
+        text-align: left;
+        margin: 20px auto;
+        padding-left: 25px;
+    }
+
+    .reg-card {
+        width: 100%;
+        max-width: 500px;
+        margin: auto;
+    }
+
 }
 
-.reg-left h2{
-    font-size:2rem;
-}
+@media (max-width:600px) {
 
-.reg-left h3{
-    font-size:1rem;
-}
+    .reg-container {
+        padding: 20px;
+    }
 
-.reg-left ul{
-    margin-left:0;
-    padding-left:20px;
-}
+    .reg-left h2 {
+        font-size: 2rem;
+    }
 
-.reg-card{
-    width:100%;
-    padding:25px;
-}
+    .reg-left h3 {
+        font-size: 1rem;
+    }
 
-.reg-card h2{
-    width:100%;
-    font-size:1.6rem;
-}
+    .reg-left ul {
+        margin-left: 0;
+        padding-left: 20px;
+    }
 
-.form-group input{
-    padding:10px;
-}
+    .reg-card {
+        width: 100%;
+        padding: 25px;
+    }
 
-.button{
-    width:100%;
-}
+    .reg-card h2 {
+        width: 100%;
+        font-size: 1.6rem;
+    }
+
+    .form-group input {
+        padding: 10px;
+    }
+
+    .button {
+        width: 100%;
+    }
 
 }

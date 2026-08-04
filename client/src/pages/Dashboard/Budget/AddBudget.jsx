@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import API from "../../../services/api";
 import "./AddBudget.css"
@@ -7,6 +7,7 @@ function AddBudget() {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const [budget, setBudget] = useState({
         _id: "",
@@ -17,82 +18,79 @@ function AddBudget() {
     });
 
     useEffect(() => {
-    if (location.state?.budget) {
-        const item = location.state.budget;
-        setBudget({
-            _id: item._id,
-            category: item.category,
-            amount: item.amount,
-            month: item.month,
-            year: item.year,
-        });
-    }
-}, [location.state]);
-
-   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setBudget((prev) => ({
-        ...prev,
-        [name]: value,
-    }));
-};
-
-const handleSubmit = async (e) => {
-
-    e.preventDefault();
-
-    const token = localStorage.getItem("token");
-    try {
-        let response;
         if (location.state?.budget) {
-            response = await API.put(
-                `/budget/${budget._id}`,
-                {
-                    category: budget.category,
-                    amount: Number(budget.amount),
-                    month: budget.month,
-                    year: Number(budget.year),
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-        } else {
-            response = await API.post(
-                "/budget",
-                {
-                    category: budget.category,
-                    amount: Number(budget.amount),
-                    month: budget.month,
-                    year: Number(budget.year),
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const item = location.state.budget;
+            setBudget({
+                _id: item._id,
+                category: item.category,
+                amount: item.amount,
+                month: item.month,
+                year: item.year,
+            });
         }
-        alert(response.data.message);
-        setBudget({
-            _id: "",
-            category: "",
-            amount: "",
-            month: "",
-            year: "",
-        });
-        navigate("/budgethistory");
-    } catch (error) {
-        console.error(error);
-        if (error.response) {
-            alert(error.response.data.message);
-        } else {
-            alert("Unable to connect to server.");
+    }, [location.state]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setBudget((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+
+        const token = localStorage.getItem("token");
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        };
+        const budgetData = {
+            category: budget.category,
+            amount: Number(budget.amount),
+            month: budget.month,
+            year: Number(budget.year),
+        };
+
+        setLoading(true);
+
+        try {
+            let response;
+            if (location.state?.budget) {
+                response = await API.put(
+                    `/budget/${budget._id}`,
+                    budgetData,
+                    { headers }
+                );
+            } else {
+                response = await API.post(
+                    "/budget",
+                    budgetData,
+                    { headers }
+                );
+            }
+            alert(response.data.message);
+            setBudget({
+                _id: "",
+                category: "",
+                amount: "",
+                month: "",
+                year: "",
+            });
+            navigate("/budgethistory");
+        } catch (error) {
+            console.error(error);
+            if (error.response?.data?.message) {
+                alert(error.response.data.message);
+            } else {
+                alert("Unable to connect to server.");
+            }
         }
-    }
-};
+        finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <section className="AB-container">
@@ -104,7 +102,9 @@ const handleSubmit = async (e) => {
                         <select
                             name="category"
                             value={budget.category}
-                            onChange={handleChange} >
+                            onChange={handleChange}
+                            required
+                        >
                             <option value="">Select Category</option>
                             <option value="Food">Food</option>
                             <option value="Travel">Travel</option>
@@ -140,7 +140,9 @@ const handleSubmit = async (e) => {
                         <select
                             name="month"
                             value={budget.month}
-                            onChange={handleChange} >
+                            onChange={handleChange}
+                            required
+                        >
                             <option value="">Select Month</option>
                             <option value="January">January</option>
                             <option value="February">February</option>
@@ -173,7 +175,18 @@ const handleSubmit = async (e) => {
                         </select>
                     </div>
                     <div className="AB-button">
-                        <button type="submit">{location.state?.budget ? "Update Budget" : "Add Budget"}</button>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                        >
+                            {loading
+                                ? location.state?.budget
+                                    ? "Updating..."
+                                    : "Adding..."
+                                : location.state?.budget
+                                    ? "Update Budget"
+                                    : "Add Budget"}
+                        </button>
                     </div>
                 </form>
             </div>

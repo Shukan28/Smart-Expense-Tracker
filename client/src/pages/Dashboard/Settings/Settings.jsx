@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 function Settings() {
 
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem("user"));
+    const [user] = useState(() => JSON.parse(localStorage.getItem("user")));
     const [currency, setCurrency] = useState(
         localStorage.getItem("currency") || "INR"
     );

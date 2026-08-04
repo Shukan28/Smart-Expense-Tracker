@@ -1,11 +1,11 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import API from "../../services/api";
-import { useNavigate } from "react-router-dom";
 import "./Register.css";
 function Register() {
 
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
 
@@ -21,23 +21,28 @@ function Register() {
             alert("Passwords do not match!");
             return;
         }
+
+        setLoading(true);
+
         try {
             const response = await API.post("/auth/register", {
                 username,
                 email,
                 password,
             });
+
             alert(response.data.message);
             navigate("/login");
         }
         catch (error) {
-            console.log(error);
-            if (error.response) {
+            console.error(error);
+            if (error.response?.data?.message) {
                 alert(error.response.data.message);
             } else {
                 alert("Cannot connect to the server.");
             }
         }
+        finally { setLoading(false); }
     };
 
     return (
@@ -56,13 +61,13 @@ function Register() {
                     </ul>
                     <h3>📊 500+ Transactions Supported</h3>
                     <h3>📈 Interactive Charts & Insights</h3>
-                    <h3>🔒 Your data is stored securely on your device.</h3>
+                    <h3>🔒 Your account data is securely managed.</h3>
                 </div>
                 <div className="reg-right">
                     <div className="reg-card">
                         <form onSubmit={handleSubmit}>
                             <h2>Create Account</h2>
-                            <div className="form-group"><label htmlFor="username">User Name:</label>
+                            <div className="form-group"><label htmlFor="username">Username:</label>
                                 <input type="text"
                                     name="username"
                                     placeholder="Shu$an28"
@@ -82,6 +87,7 @@ function Register() {
                                 <input type="password"
                                     name="password"
                                     placeholder="your secret"
+                                    minLength={8}
                                     required />
                             </div>
                             <div className="form-group">
@@ -91,8 +97,8 @@ function Register() {
                                     placeholder="Re-enter your password"
                                     required />
                             </div>
-                            <button type="submit" className="button">
-                                Create Account
+                            <button type="submit" className="button" disabled={loading}>
+                                {loading ? "Creating Account..." : "Create Account"}
                             </button>
                         </form>
                         <p>

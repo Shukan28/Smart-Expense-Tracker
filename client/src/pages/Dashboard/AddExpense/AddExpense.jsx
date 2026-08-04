@@ -1,14 +1,12 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import API from "../../../services/api";
-import "./AddExpense.css"
+import "./AddExpense.css";
 
 function AddExpense() {
-
     const location = useLocation();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const [expense, setExpense] = useState({
         _id: "",
@@ -17,12 +15,13 @@ function AddExpense() {
         category: "",
         date: "",
         payment: "",
-        notes: ""
+        notes: "",
     });
 
     useEffect(() => {
         if (location.state?.expense) {
             const item = location.state.expense;
+
             setExpense({
                 _id: item._id,
                 expenseName: item.title,
@@ -30,57 +29,54 @@ function AddExpense() {
                 category: item.category,
                 date: item.date ? item.date.split("T")[0] : "",
                 payment: item.payment,
-                notes: item.description,
+                notes: item.description || "",
             });
         }
     }, [location.state]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setExpense((prevExpense) => ({
-            ...prevExpense,
+
+        setExpense((prev) => ({
+            ...prev,
             [name]: value,
         }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const token = localStorage.getItem("token");
+
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        };
+
+        const expenseData = {
+            title: expense.expenseName,
+            amount: Number(expense.amount),
+            category: expense.category,
+            date: expense.date,
+            payment: expense.payment,
+            description: expense.notes,
+        };
+
+        setLoading(true);
+
         try {
             let response;
+
             if (location.state?.expense) {
                 response = await API.put(
                     `/expenses/${expense._id}`,
-                    {
-                        title: expense.expenseName,
-                        amount: Number(expense.amount),
-                        category: expense.category,
-                        date: expense.date,
-                        payment: expense.payment,
-                        description: expense.notes,
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
+                    expenseData,
+                    { headers }
                 );
             } else {
                 response = await API.post(
                     "/expenses",
-                    {
-                        title: expense.expenseName,
-                        amount: Number(expense.amount),
-                        category: expense.category,
-                        date: expense.date,
-                        payment: expense.payment,
-                        description: expense.notes,
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
+                    expenseData,
+                    { headers }
                 );
             }
 
@@ -95,23 +91,34 @@ function AddExpense() {
                 payment: "",
                 notes: "",
             });
+
             navigate("/expensehistory");
+
         } catch (error) {
             console.error(error);
-            if (error.response) {
+
+            if (error.response?.data?.message) {
                 alert(error.response.data.message);
             } else {
                 alert("Unable to connect to server.");
             }
+
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <section className="AE-container">
             <div className="AE-form">
-                <h2>{location.state?.expense ? "Edit Expense" : "Add Expense"}</h2>
+                <h2>
+                    {location.state?.expense ? "Edit Expense" : "Add Expense"}
+                </h2>
+
                 <form onSubmit={handleSubmit}>
-                    <div className="fields"><label htmlFor="expname">Expense Name:</label>
+                    <div className="fields">
+                        <label htmlFor="expenseName">Expense Name:</label>
+
                         <input
                             type="text"
                             name="expenseName"
@@ -119,11 +126,14 @@ function AddExpense() {
                             onChange={handleChange}
                             placeholder="Electricity Bill"
                             autoComplete="on"
-                            required
                             autoFocus
+                            required
                         />
                     </div>
-                    <div className="fields"><label htmlFor="amount">Amount:</label>
+
+                    <div className="fields">
+                        <label htmlFor="amount">Amount:</label>
+
                         <input
                             type="number"
                             name="amount"
@@ -134,12 +144,16 @@ function AddExpense() {
                             required
                         />
                     </div>
+
                     <div className="fields">
                         <label htmlFor="category">Category:</label>
+
                         <select
                             name="category"
                             value={expense.category}
-                            onChange={handleChange} >
+                            onChange={handleChange}
+                            required
+                        >
                             <option value="">Select Category</option>
                             <option value="Food">Food</option>
                             <option value="Travel">Travel</option>
@@ -158,8 +172,10 @@ function AddExpense() {
                             <option value="Others">Others</option>
                         </select>
                     </div>
+
                     <div className="fields">
                         <label htmlFor="date">Date:</label>
+
                         <input
                             type="date"
                             name="date"
@@ -168,12 +184,16 @@ function AddExpense() {
                             required
                         />
                     </div>
+
                     <div className="fields">
                         <label htmlFor="payment">Payment:</label>
+
                         <select
                             name="payment"
                             value={expense.payment}
-                            onChange={handleChange} >
+                            onChange={handleChange}
+                            required
+                        >
                             <option value="">Select Payment</option>
                             <option value="Cash">Cash</option>
                             <option value="UPI">UPI</option>
@@ -185,19 +205,35 @@ function AddExpense() {
                             <option value="Other">Other</option>
                         </select>
                     </div>
-                    <div className="fields"><label htmlFor="notes">Notes:</label>
+
+                    <div className="fields">
+                        <label htmlFor="notes">Notes:</label>
+
                         <textarea
                             name="notes"
                             value={expense.notes}
                             onChange={handleChange}
                         />
                     </div>
+
                     <div className="AE-button">
-                        <button type="submit">{location.state?.expense ? "Update Expense" : "Add Expense"}</button>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                        >
+                            {loading
+                                ? location.state?.expense
+                                    ? "Updating..."
+                                    : "Adding..."
+                                : location.state?.expense
+                                    ? "Update Expense"
+                                    : "Add Expense"}
+                        </button>
                     </div>
                 </form>
             </div>
         </section>
     );
 }
+
 export default AddExpense;

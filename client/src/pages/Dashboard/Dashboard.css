@@ -200,7 +200,7 @@
     transform: translateX(6px);
 }
 
-.transaction-card { 
+.transaction-card {
     background-color: #0F172A;
     color: #06B6D4;
     padding: 15px 18px;
@@ -209,7 +209,7 @@
 
 .transaction-card:hover {
     transform: translateY(-3px);
-    background: rgba(255,255,255,.05);
+    background: rgba(255, 255, 255, .05);
 }
 
 .expense-name {
@@ -228,214 +228,217 @@
     color: #7C3AED;
     margin-top: 8px;
 }
-@media (max-width:1200px){
 
-.db-container{
+@media (max-width:1200px) {
 
-    padding-left:25px;
+    .db-container {
 
-}
+        padding-left: 25px;
 
-.db-container-left{
+    }
 
-    padding-left:20px;
+    .db-container-left {
 
-}
+        padding-left: 20px;
 
-.side-card{
+    }
 
-    width:24%;
+    .side-card {
 
-}
+        width: 24%;
 
-.summary-cards{
+    }
 
-    gap:20px;
+    .summary-cards {
 
-}
+        gap: 20px;
 
-.dash-cards{
+    }
 
-    gap:30px;
+    .dash-cards {
 
-    margin-left:0;
+        gap: 30px;
 
-}
+        margin-left: 0;
 
-.expense-card{
+    }
 
-    width:55%;
+    .expense-card {
 
-}
+        width: 55%;
 
-.db-card{
+    }
 
-    width:35%;
+    .db-card {
 
-}
+        width: 35%;
 
-}
-@media (max-width:992px){
-
-.db-container{
-
-    flex-direction:column;
-
-    margin-top:120px;
-
-    padding:20px;
+    }
 
 }
 
-.db-container-left{
+@media (max-width:992px) {
 
-    max-width:100%;
+    .db-container {
 
-    width:100%;
+        flex-direction: column;
 
-    padding:0;
+        margin-top: 120px;
 
-}
+        padding: 20px;
 
-.side-card{
+    }
 
-    position:static;
+    .db-container-left {
 
-    width:100%;
+        max-width: 100%;
 
-    display:grid;
+        width: 100%;
 
-    grid-template-columns:repeat(2,1fr);
+        padding: 0;
 
-    gap:15px;
+    }
 
-}
+    .side-card {
 
-.db-container-right{
+        position: static;
 
-    max-width:100%;
+        width: 100%;
 
-    width:100%;
+        display: grid;
 
-}
+        grid-template-columns: repeat(2, 1fr);
 
-.summary-cards{
+        gap: 15px;
 
-    flex-wrap:wrap;
+    }
 
-    justify-content:center;
+    .db-container-right {
 
-}
+        max-width: 100%;
 
-.container-right-1,
+        width: 100%;
 
-.container-right-2,
+    }
 
-.container-right-3{
+    .summary-cards {
 
-    margin-left:0;
+        flex-wrap: wrap;
 
-    width:260px;
+        justify-content: center;
 
-}
+    }
 
-.dash-cards{
+    .container-right-1,
 
-    flex-direction:column;
+    .container-right-2,
 
-    margin-left:0;
+    .container-right-3 {
 
-    align-items:center;
+        margin-left: 0;
 
-}
+        width: 260px;
 
-.dash-card-1,
+    }
 
-.dash-card-2{
+    .dash-cards {
 
-    width:90%;
+        flex-direction: column;
 
-}
+        margin-left: 0;
 
-.expense-card{
+        align-items: center;
 
-    width:90%;
+    }
 
-}
+    .dash-card-1,
 
-.db-card{
+    .dash-card-2 {
 
-    width:300px;
+        width: 90%;
 
-}
+    }
 
-}
-@media (max-width:600px){
+    .expense-card {
 
-.db-container{
+        width: 90%;
 
-    margin-top:70px;
+    }
 
-    padding:15px;
+    .db-card {
 
-}
+        width: 300px;
 
-.db-container-right h1{
-
-    font-size:2rem;
-
-    text-align:center;
+    }
 
 }
 
-.side-card{
+@media (max-width:600px) {
 
-    grid-template-columns:1fr;
+    .db-container {
 
-}
+        margin-top: 70px;
 
-.sidebar-link{
+        padding: 15px;
 
-    font-size:18px;
+    }
 
-    text-align:center;
+    .db-container-right h1 {
 
-}
+        font-size: 2rem;
 
-.summary-cards{
+        text-align: center;
 
-    flex-direction:column;
+    }
 
-    width:100%;
+    .side-card {
 
-}
+        grid-template-columns: 1fr;
 
-.container-right-1,
+    }
 
-.container-right-2,
+    .sidebar-link {
 
-.container-right-3{
+        font-size: 18px;
 
-    width:100%;
+        text-align: center;
 
-}
+    }
 
-.db-card{
+    .summary-cards {
 
-    width:100%;
+        flex-direction: column;
 
-}
+        width: 100%;
 
-.dash-card-1,
+    }
 
-.dash-card-2,
+    .container-right-1,
 
-.expense-card{
+    .container-right-2,
 
-    width:100%;
+    .container-right-3 {
 
-    padding:20px;
+        width: 100%;
 
-}
+    }
+
+    .db-card {
+
+        width: 100%;
+
+    }
+
+    .dash-card-1,
+
+    .dash-card-2,
+
+    .expense-card {
+
+        width: 100%;
+
+        padding: 20px;
+
+    }
 
 }

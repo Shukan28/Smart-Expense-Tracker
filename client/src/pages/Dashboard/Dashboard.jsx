@@ -12,7 +12,6 @@ import {
     Bar,
     XAxis,
     YAxis,
-    CartesianGrid,
 } from "recharts";
 
 function Dashboard() {
@@ -237,7 +236,7 @@ function Dashboard() {
 
                                 <div
                                     className="transaction-card"
-                                    key={index}
+                                    key={expense._id}
                                 >
 
                                     <p className="expense-name">
@@ -277,7 +276,7 @@ function Dashboard() {
                                 tickLine={false} />
                             <YAxis hide />
                             <Tooltip
-                                formatter={(value) => [`₹${value}`, "Expense"]}
+                                formatter={(value) => [`{currencySymbols[currency]}${value}`, "Expense"]}
                                 contentStyle={{
                                     backgroundColor: "#0F172A",
                                     border: "none",

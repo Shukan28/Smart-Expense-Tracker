@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import API from "../../../services/api";
 import "./ExpenseHistory.css"
@@ -10,19 +10,25 @@ function ExpenseHistory() {
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("newest");
     const [category, setCategory] = useState("All Categories");
+    const currency = localStorage.getItem("currency") || "INR";
 
-    console.log("ExpenseHistory received:", expenses);
-    console.log(search);
-    console.log(category);
+    const currencySymbols = {
+        INR: "₹",
+        USD: "$",
+        EUR: "€",
+        GBP: "£",
+        JPY: "¥",
+        AUD: "A$",
+        CAD: "C$",
+    };
 
     const fetchExpenses = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await API.get("/expenses", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const headers = {
+                Authorization: `Bearer ${token}`,
+            };
+            const response = await API.get("/expenses", { headers });
             setExpenses(response.data.expenses);
         } catch (error) {
             console.error(error);
@@ -59,28 +65,27 @@ function ExpenseHistory() {
     });
 
     const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-        "Delete this expense?"
-    );
-    if (!confirmDelete) return;
-    try {
-        const token = localStorage.getItem("token");
-        await API.delete(`/expenses/${id}`, {
-            headers: {
+        const confirmDelete = window.confirm(
+            "Delete this expense?"
+        );
+        if (!confirmDelete) return;
+        try {
+            const token = localStorage.getItem("token");
+            const headers = {
                 Authorization: `Bearer ${token}`,
-            },
-        });
-        fetchExpenses();
-        alert("Expense deleted successfully.");
-    } catch (error) {
-        console.error(error);
-        if (error.response) {
-            alert(error.response.data.message);
-        } else {
-            alert("Unable to delete expense.");
+            };
+            await API.delete(`/expenses/${id}`, { headers });
+            fetchExpenses();
+            alert("Expense deleted successfully.");
+        } catch (error) {
+            console.error(error);
+            if (error.response?.data?.message) {
+                alert(error.response.data.message);
+            } else {
+                alert("Unable to delete expense.");
+            }
         }
-    }
-};
+    };
 
     return (
         <section className="EH-container">
@@ -132,7 +137,7 @@ function ExpenseHistory() {
                         </tr>
                     </thead>
                     <tbody>
-                        {sortedExpenses.map((item, index) => (
+                        {sortedExpenses.map((item) => (
                             <tr key={item._id}>
                                 <td>
                                     {new Date(item.date).toLocaleDateString("en-IN", {
@@ -143,7 +148,7 @@ function ExpenseHistory() {
                                 </td>
                                 <td>{item.title}</td>
                                 <td>{item.category}</td>
-                                <td>₹{item.amount}</td>
+                                <td>{currencySymbols[currency]}{item.amount}</td>
                                 <td>{item.payment}</td>
                                 <td><button className="edit-btn" onClick={() =>
                                     navigate("/addexpense",
@@ -158,7 +163,7 @@ function ExpenseHistory() {
                     </tbody>
                 </table>
             </div>
-            <p className="total">Total Expenses this month: <span>₹{totalExpense}</span></p>
+            <p className="total">Total Expenses this month: <span>{currencySymbols[currency]}{totalExpense}</span></p>
             <NavLink className="nav-addExpense" to={"/addExpense"}>Add Expense</NavLink>
         </section>
     );

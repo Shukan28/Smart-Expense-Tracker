@@ -59,7 +59,7 @@
     background: #0F172A;
     color: #06B6D4;
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(124,58,237,.45);
+    box-shadow: 0 10px 25px rgba(124, 58, 237, .45);
 }
 
 .AI-button {
@@ -74,50 +74,52 @@ select:focus {
     border: 2px solid #7C3AED;
     box-shadow: 0 0 6px #7C3AED;
 }
-@media (max-width:900px){
 
-.AI-container{
-    padding-top:120px;
-    padding-inline:20px;
+@media (max-width:900px) {
+
+    .AI-container {
+        padding-top: 120px;
+        padding-inline: 20px;
+    }
+
+    .AI-form {
+        width: 100%;
+        max-width: 600px;
+        padding: 40px;
+    }
+
 }
 
-.AI-form{
-    width:100%;
-    max-width:600px;
-    padding:40px;
-}
+@media (max-width:600px) {
 
-}
-@media (max-width:600px){
+    .AI-container {
+        padding-top: 70px;
+        padding-inline: 15px;
+    }
 
-.AI-container{
-    padding-top:70px;
-    padding-inline:15px;
-}
+    .AI-form {
+        width: 100%;
+        padding: 25px;
+        border-radius: 20px;
+    }
 
-.AI-form{
-    width:100%;
-    padding:25px;
-    border-radius:20px;
-}
+    .AI-form h2 {
+        font-size: 30px;
+        margin-bottom: 30px;
+    }
 
-.AI-form h2{
-    font-size:30px;
-    margin-bottom:30px;
-}
+    .AI-fields label {
+        font-size: 15px;
+    }
 
-.AI-fields label{
-    font-size:15px;
-}
+    .AI-fields input,
+    .AI-fields select {
+        padding: 10px;
+        font-size: 15px;
+    }
 
-.AI-fields input,
-.AI-fields select{
-    padding:10px;
-    font-size:15px;
-}
-
-.AI-form button{
-    width:100%;
-}
+    .AI-form button {
+        width: 100%;
+    }
 
 }

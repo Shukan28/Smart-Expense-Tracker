@@ -50,12 +50,15 @@ input::placeholder {
     width: 240px;
 }
 
-table th, td {
+table th,
+td {
     border: 1px solid #7C3AED;
     border-collapse: collapse;
 }
 
-table, th, td {
+table,
+th,
+td {
     font-family: 'Courier New', Courier, monospace;
     padding: 20px;
     border-collapse: separate;
@@ -126,90 +129,93 @@ th {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(124, 58, 237, .45);
 }
-@media (max-width:1200px){
 
-.IH-container{
-    padding-inline:20px;
-}
+@media (max-width:1200px) {
 
-.IH-table{
-    overflow-x:auto;
-}
+    .IH-container {
+        padding-inline: 20px;
+    }
 
-table{
-    min-width:800px;
-}
+    .IH-table {
+        overflow-x: auto;
+    }
 
-.nav-addIncome{
-    width:250px;
-}
+    table {
+        min-width: 800px;
+    }
 
-}
-@media (max-width:768px){
-
-.IH-container{
-    padding-top:120px;
-}
-
-.IH-filters{
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:20px;
-}
-
-.IH-filters input,
-.IH-filters select{
-    width:300px;
-}
-
-.IH-table{
-    justify-content:flex-start;
-    overflow-x:auto;
-}
-
-table{
-    min-width:800px;
-}
-
-.nav-addIncome{
-    width:220px;
-}
+    .nav-addIncome {
+        width: 250px;
+    }
 
 }
-@media (max-width:600px){
 
-.IH-container{
-    padding-top:70px;
-    padding-inline:15px;
+@media (max-width:768px) {
+
+    .IH-container {
+        padding-top: 120px;
+    }
+
+    .IH-filters {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .IH-filters input,
+    .IH-filters select {
+        width: 300px;
+    }
+
+    .IH-table {
+        justify-content: flex-start;
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 800px;
+    }
+
+    .nav-addIncome {
+        width: 220px;
+    }
+
 }
 
-.IH-container h2{
-    font-size:30px;
-}
+@media (max-width:600px) {
 
-.IH-filters{
-    flex-direction:column;
-    gap:15px;
-}
+    .IH-container {
+        padding-top: 70px;
+        padding-inline: 15px;
+    }
 
-.IH-filters input,
-.IH-filters select{
-    width:100%;
-    max-width:100%;
-}
+    .IH-container h2 {
+        font-size: 30px;
+    }
 
-.IH-edit-btn,
-.IH-delete-btn{
-    padding:8px 12px;
-    font-size:14px;
-}
+    .IH-filters {
+        flex-direction: column;
+        gap: 15px;
+    }
 
-.nav-addIncome{
-    width:100%;
-}
+    .IH-filters input,
+    .IH-filters select {
+        width: 100%;
+        max-width: 100%;
+    }
 
-.total{
-    font-size:18px;
-}
+    .IH-edit-btn,
+    .IH-delete-btn {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .nav-addIncome {
+        width: 100%;
+    }
+
+    .total {
+        font-size: 18px;
+    }
 
 }

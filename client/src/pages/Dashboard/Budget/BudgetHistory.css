@@ -125,106 +125,109 @@ th {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(124, 58, 237, .45);
 }
-@media (max-width:1200px){
 
-.BH-container{
-    padding-inline:20px;
-}
+@media (max-width:1200px) {
 
-.BH-table{
-    overflow-x:auto;
-}
+    .BH-container {
+        padding-inline: 20px;
+    }
 
-table{
-    min-width:900px;
-}
+    .BH-table {
+        overflow-x: auto;
+    }
 
-.nav-addBudget{
-    width:250px;
-}
+    table {
+        min-width: 900px;
+    }
 
-}
-@media (max-width:768px){
-
-.BH-container{
-
-    padding-top:120px;
+    .nav-addBudget {
+        width: 250px;
+    }
 
 }
 
-.BH-filters{
+@media (max-width:768px) {
 
-    flex-direction:column;
+    .BH-container {
 
-    gap:20px;
+        padding-top: 120px;
 
-}
+    }
 
-.BH-filters input{
+    .BH-filters {
 
-    width:100%;
+        flex-direction: column;
 
-    max-width:350px;
+        gap: 20px;
 
-}
+    }
 
-.BH-table{
+    .BH-filters input {
 
-    overflow-x:auto;
+        width: 100%;
 
-    justify-content:flex-start;
+        max-width: 350px;
 
-}
+    }
 
-table{
+    .BH-table {
 
-    min-width:850px;
+        overflow-x: auto;
 
-}
+        justify-content: flex-start;
 
-.nav-addBudget{
+    }
 
-    width:220px;
+    table {
 
-}
+        min-width: 850px;
 
-}
-@media (max-width:600px){
+    }
 
-.BH-container{
+    .nav-addBudget {
 
-    padding-top:70px;
+        width: 220px;
 
-    padding-inline:15px;
-
-}
-
-.BH-container h2{
-
-    font-size:30px;
+    }
 
 }
 
-.BH-filters input{
+@media (max-width:600px) {
 
-    max-width:100%;
+    .BH-container {
 
-}
+        padding-top: 70px;
 
-.BH-edit-btn,
+        padding-inline: 15px;
 
-.BH-delete-btn{
+    }
 
-    padding:8px 12px;
+    .BH-container h2 {
 
-    font-size:14px;
+        font-size: 30px;
 
-}
+    }
 
-.nav-addBudget{
+    .BH-filters input {
 
-    width:100%;
+        max-width: 100%;
 
-}
+    }
+
+    .BH-edit-btn,
+
+    .BH-delete-btn {
+
+        padding: 8px 12px;
+
+        font-size: 14px;
+
+    }
+
+    .nav-addBudget {
+
+        width: 100%;
+
+    }
 
 }

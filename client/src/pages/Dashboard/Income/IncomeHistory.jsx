@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, NavLink } from "react-router-dom";
 import API from "../../../services/api";
 import "./IncomeHistory.css"
 
@@ -12,15 +11,25 @@ function IncomeHistory() {
     const [sortBy, setSortBy] = useState("newest");
     const [type, setType] = useState("All Types");
     const [source, setSource] = useState("All Sources");
+    const currency = localStorage.getItem("currency") || "INR";
+
+    const currencySymbols = {
+        INR: "₹",
+        USD: "$",
+        EUR: "€",
+        GBP: "£",
+        JPY: "¥",
+        AUD: "A$",
+        CAD: "C$",
+    };
 
     const fetchIncome = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await API.get("/income", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const headers = {
+                Authorization: `Bearer ${token}`,
+            };
+            const response = await API.get("/income", { headers });
             setIncomes(response.data.incomes);
         } catch (error) {
             console.error(error);
@@ -74,16 +83,15 @@ function IncomeHistory() {
         if (!confirmDelete) return;
         try {
             const token = localStorage.getItem("token");
-            await API.delete(`/income/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const headers = {
+                Authorization: `Bearer ${token}`,
+            };
+            await API.delete(`/income/${id}`, { headers });
             fetchIncome();
             alert("Income deleted successfully.");
         } catch (error) {
             console.error(error);
-            if (error.response) {
+            if (error.response?.data?.message) {
                 alert(error.response.data.message);
             } else {
                 alert("Unable to delete income.");
@@ -158,7 +166,7 @@ function IncomeHistory() {
                         </tr>
                     </thead>
                     <tbody>
-                        {sortedIncome.map((item, index) => (
+                        {sortedIncome.map((item) => (
                             <tr key={item._id}>
                                 <td>
                                     {new Date(item.date).toLocaleDateString("en-IN", {
@@ -169,7 +177,7 @@ function IncomeHistory() {
                                 </td>
                                 <td>{item.source}</td>
                                 <td>{item.type}</td>
-                                <td>₹{item.salary}</td>
+                                <td>{currencySymbols[currency]}{item.salary}</td>
                                 <td><button className="IH-edit-btn" onClick={() =>
                                     navigate("/addincome",
                                         {
@@ -183,7 +191,7 @@ function IncomeHistory() {
                     </tbody>
                 </table>
             </div>
-            <p className="total">Total Income this month: <span>₹{totalIncome}</span></p>
+            <p className="total">Total Income this month: <span>{currencySymbols[currency]}{totalIncome}</span></p>
             <NavLink className="nav-addIncome" to={"/addIncome"}>Add Income</NavLink>
         </section>
     );

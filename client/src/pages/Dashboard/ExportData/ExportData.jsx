@@ -447,53 +447,35 @@ function ExportData() {
     const [incomes, setIncomes] = useState([]);
     const [budgets, setBudgets] = useState([]);
 
-    const fetchExpenses = async () => {
-    try {
-        const token = localStorage.getItem("token");
-        const response = await API.get("/expenses", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        setExpenses(response.data.expenses);
-    } catch (error) {
-        console.error(error);
-    }
-};
+    const fetchData = async () => {
+        try {
+            const token = localStorage.getItem("token");
 
-const fetchIncome = async () => {
-    try {
-        const token = localStorage.getItem("token");
-        const response = await API.get("/income", {
-            headers: {
+            const headers = {
                 Authorization: `Bearer ${token}`,
-            },
-        });
-        setIncomes(response.data.incomes);
-    } catch (error) {
-        console.error(error);
-    }
-};
+            };
 
-const fetchBudgets = async () => {
-    try {
-        const token = localStorage.getItem("token");
-        const response = await API.get("/budget", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        setBudgets(response.data.budgets);
-    } catch (error) {
-        console.error(error);
-    }
-};
+            const [
+                expensesResponse,
+                incomeResponse,
+                budgetResponse,
+            ] = await Promise.all([
+                API.get("/expenses", { headers }),
+                API.get("/income", { headers }),
+                API.get("/budget", { headers }),
+            ]);
 
-    useEffect(() => {
-        fetchExpenses();
-        fetchIncome();
-        fetchBudgets();
-    }, []);
+            setExpenses(expensesResponse.data.expenses);
+            setIncomes(incomeResponse.data.incomes);
+            setBudgets(budgetResponse.data.budgets);
+
+        } catch (error) {
+            console.error(error);
+            alert("Failed to fetch data.");
+        }
+    };
+
+    useEffect(() => { fetchData(); }, []);
 
     const exportExpensesExcel = () => {
 
