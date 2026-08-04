@@ -2,17 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import API from "../../../services/api";
 import "./AddIncome.css"
 
-function AddIncome({ incomes, setIncomes, editIncome, setEditIncome }) {
+function AddIncome() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    console.log(location.state);
-    console.log(incomes);
 
     const [income, setIncome] = useState({
-        id: "",
+        _id: "",
         type: "",
         source: "",
         salary: "",
@@ -20,10 +19,17 @@ function AddIncome({ incomes, setIncomes, editIncome, setEditIncome }) {
     });
 
     useEffect(() => {
-        if (location.state?.income) {
-            setIncome(location.state.income);
-        }
-    }, [location.state]);
+    if (location.state?.income) {
+        const item = location.state.income;
+        setIncome({
+            _id: item._id,
+            type: item.type,
+            source: item.source,
+            salary: item.salary,
+            date: item.date ? item.date.split("T")[0] : "",
+        });
+    }
+}, [location.state]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -41,40 +47,65 @@ function AddIncome({ incomes, setIncomes, editIncome, setEditIncome }) {
         }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-         const incomeData = {
-        ...income,
-        id: location.state?.income?.id || crypto.randomUUID()
-    };
-    
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    try {
+        let response;
         if (location.state?.income) {
-            setIncomes(prev =>
-                prev.map(item =>
-                    item.id === location.state.income.id
-                        ? incomeData : item
-                )
+            response = await API.put(
+                `/income/${income._id}`,
+                {
+                    type: income.type,
+                    source: income.source,
+                    salary: Number(income.salary),
+                    date: income.date,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
         } else {
-            setIncomes(prev => [...prev, incomeData]);
+            response = await API.post(
+                "/income",
+                {
+                    type: income.type,
+                    source: income.source,
+                    salary: Number(income.salary),
+                    date: income.date,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
         }
-
+        alert(response.data.message);
         setIncome({
-            id: "",
+            _id: "",
             type: "",
             source: "",
             salary: "",
             date: "",
         });
-
-        navigate("/incomehistory");
-    };
+        navigate("/incomehistory", { replace: true });
+    } catch (error) {
+        console.error(error);
+        if (error.response) {
+            alert(error.response.data.message);
+        } else {
+            alert("Unable to connect to server.");
+        }
+    }
+};
 
     return (
         <section className="AI-container">
             <div className="AI-form">
-                <h2>{location.state?.index !== undefined ? "Edit Income" : "Add Income"}</h2>
+                <h2>{location.state?.income ? "Edit Income" : "Add Income"}</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="AI-fields">
                         <label htmlFor="type">Income Type:</label>
@@ -193,7 +224,7 @@ function AddIncome({ incomes, setIncomes, editIncome, setEditIncome }) {
                         />
                     </div>
                     <div className="AI-button">
-                        <button type="submit">{location.state?.index !== undefined ? "Update Income" : "Add Income"}</button>
+                        <button type="submit">{location.state?.income ? "Update Income" : "Add Income"}</button>
                     </div>
                 </form>
             </div>

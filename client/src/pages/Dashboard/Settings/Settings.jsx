@@ -1,12 +1,11 @@
 import "./Settings.css"
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function Settings({ expenses, setExpenses, incomes, setIncomes, budgets, setBudgets }) {
+function Settings() {
 
+    const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [deleteType, setDeleteType] = useState("");
     const [currency, setCurrency] = useState(
         localStorage.getItem("currency") || "INR"
     );
@@ -21,33 +20,11 @@ function Settings({ expenses, setExpenses, incomes, setIncomes, budgets, setBudg
         { code: "CAD", symbol: "C$", name: "Canadian Dollar" }
     ];
 
-    const currencySymbols = {
-        INR: "₹",
-        USD: "$",
-        EUR: "€",
-        GBP: "£",
-        JPY: "¥",
-        AUD: "A$",
-        CAD: "C$"
-    };
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
 
-    const handleDelete = (type) => {
-        deleteActions[type]?.();
-    };
-
-    const deleteActions = {
-        expenses: () => {
-            localStorage.removeItem("expenses");
-            setExpenses([]);
-        },
-        incomes: () => {
-            localStorage.removeItem("income");
-            setIncomes([]);
-        },
-        budgets: () => {
-            localStorage.removeItem("budgets");
-            setBudgets([]);
-        }
+        navigate("/login");
     };
 
     useEffect(() => {
@@ -87,60 +64,11 @@ function Settings({ expenses, setExpenses, incomes, setIncomes, budgets, setBudg
                         <h3>🔒 Security</h3>
                         <button className="change-pwd-btn">🔒 Change Password</button>
                     </div>
-                    <div className="set-card4">
-                        <h3>🗑 Data</h3>
-                        <button className="data-clear-btn"
-                            onClick={() => {
-                                setDeleteType("expenses");
-                                setShowConfirm(true);
-                            }}>
-                            Clear All Expenses
-                        </button>
-                        <button className="data-clear-btn"
-                            onClick={() => {
-                                setDeleteType("incomes");
-                                setShowConfirm(true);
-                            }}>
-                            Clear All Income
-                        </button>
-                        <button className="data-clear-btn"
-                            onClick={() => {
-                                setDeleteType("budgets");
-                                setShowConfirm(true);
-                            }}>
-                            Clear All Budgets
-                        </button>
-                    </div>
                 </div>
-                {showConfirm && (
-                    <div className="popup">
-                        <div className="popup-box">
-                            <h3>Delete Data?</h3>
-                            <p>
-                                This action cannot be undone.
-                            </p>
-                            <div className="popup-buttons">
-                                <button
-                                    className="delete-btn"
-                                    onClick={() => {
-                                        handleDelete(deleteType);
-                                        setShowConfirm(false);
-                                    }}
-                                >
-                                    Delete
-                                </button>
-                                <button
-                                    className="cancel-btn"
-                                    onClick={() => setShowConfirm(false)}
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
-            <NavLink to="/login" className="settings-logout">🚪 Logout</NavLink>
+            <button onClick={handleLogout} className="settings-logout">
+                🚪 Logout
+            </button>
         </section>
     );
 }

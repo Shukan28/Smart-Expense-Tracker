@@ -184,6 +184,17 @@
     transition: 0.3s;
 }
 
+.logout-btn {
+    background: none;
+    border: none;
+    color: #06B6D4;
+    font-size: 23px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
 .sidebar-link:hover {
     color: #7C3AED;
     transform: translateX(6px);

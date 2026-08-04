@@ -1,4 +1,6 @@
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import API from "../../services/api";
 import "./Dashboard.css"
 import {
     PieChart,
@@ -13,7 +15,12 @@ import {
     CartesianGrid,
 } from "recharts";
 
-function Dashboard({ expenses, incomes, budgets }) {
+function Dashboard() {
+
+    const navigate = useNavigate();
+    const [incomes, setIncomes] = useState([]);
+    const [budgets, setBudgets] = useState([]);
+    const [expenses, setExpenses] = useState([]);
 
     const categoryIcons = {
         Food: "🍔",
@@ -58,6 +65,54 @@ function Dashboard({ expenses, incomes, budgets }) {
         }
     });
 
+    const fetchExpenses = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await API.get("/expenses", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setExpenses(response.data.expenses);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const fetchIncome = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await API.get("/income", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setIncomes(response.data.incomes);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const fetchBudgets = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await API.get("/budget", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setBudgets(response.data.budgets);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchExpenses();
+        fetchIncome();
+        fetchBudgets();
+    }, []);
+
     const totalIncome = incomes.reduce(
         (sum, item) => sum + Number(item.salary), 0
     );
@@ -97,6 +152,13 @@ function Dashboard({ expenses, incomes, budgets }) {
         JPY: "¥",
         AUD: "A$",
         CAD: "C$"
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        navigate("/login");
     };
 
     expenses.forEach((item) => {
@@ -140,9 +202,9 @@ function Dashboard({ expenses, incomes, budgets }) {
                     <NavLink to="/settings" className="sidebar-link">
                         ⚙️ Settings
                     </NavLink>
-                    <NavLink to="/login" className="sidebar-link">
+                    <button onClick={handleLogout} className="sidebar-link logout-btn">
                         🚪 Logout
-                    </NavLink>
+                    </button>
                 </div>
             </div>
             <div className="db-container-right">
@@ -181,7 +243,7 @@ function Dashboard({ expenses, incomes, budgets }) {
                                     <p className="expense-name">
                                         {categoryIcons[expense.category]}
                                         {" "}
-                                        {expense.expenseName}
+                                        {expense.title}
                                     </p>
                                     <p className="expense-date">
                                         {new Date(expense.date).toLocaleDateString(
@@ -194,7 +256,7 @@ function Dashboard({ expenses, incomes, budgets }) {
                                         )}
                                     </p>
                                     <p className="expense-amount">
-                                        ₹{expense.amount}
+                                        {currencySymbols[currency]}{expense.amount}
                                     </p>
                                 </div>
                             ))

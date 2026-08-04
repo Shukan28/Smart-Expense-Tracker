@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import API from "../../../services/api";
 import "./AddBudget.css"
 
-function AddBudget({ budgets, setBudgets }) {
+function AddBudget() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    console.log(location.state);
-    console.log(budgets);
 
     const [budget, setBudget] = useState({
-        id: "",
+        _id: "",
         category: "",
         amount: "",
         month: "",
@@ -18,61 +17,87 @@ function AddBudget({ budgets, setBudgets }) {
     });
 
     useEffect(() => {
+    if (location.state?.budget) {
+        const item = location.state.budget;
+        setBudget({
+            _id: item._id,
+            category: item.category,
+            amount: item.amount,
+            month: item.month,
+            year: item.year,
+        });
+    }
+}, [location.state]);
+
+   const handleChange = (e) => {
+    const { name, value } = e.target;
+    setBudget((prev) => ({
+        ...prev,
+        [name]: value,
+    }));
+};
+
+const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+    try {
+        let response;
         if (location.state?.budget) {
-            setBudget(location.state.budget);
-        }
-    }, [location.state]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        if (name === "type") {
-            setBudget({
-                ...budget,
-                type: value,
-                source: "",
-            });
-        } else {
-            setBudget({
-                ...budget,
-                [name]: value,
-            });
-        }
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const budgetData = {
-            ...budget,
-            id: location.state?.budget?.id || crypto.randomUUID()
-        };
-
-       if(location.state?.budget) {
-            setBudgets((prev) =>
-                prev.map(item =>
-                    item.id === location.state.budget.id ? budgetData : item
-                )
+            response = await API.put(
+                `/budget/${budget._id}`,
+                {
+                    category: budget.category,
+                    amount: Number(budget.amount),
+                    month: budget.month,
+                    year: Number(budget.year),
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
         } else {
-            setBudgets((prev) => [...prev, budgetData]);
+            response = await API.post(
+                "/budget",
+                {
+                    category: budget.category,
+                    amount: Number(budget.amount),
+                    month: budget.month,
+                    year: Number(budget.year),
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
         }
-
+        alert(response.data.message);
         setBudget({
-            id: "",
+            _id: "",
             category: "",
             amount: "",
             month: "",
             year: "",
         });
-
         navigate("/budgethistory");
-    };
-
+    } catch (error) {
+        console.error(error);
+        if (error.response) {
+            alert(error.response.data.message);
+        } else {
+            alert("Unable to connect to server.");
+        }
+    }
+};
 
     return (
         <section className="AB-container">
             <div className="AB-form">
-                <h2>{location.state?.index !== undefined ? "Edit Budget" : "Add Budget"}</h2>
+                <h2>{location.state?.budget ? "Edit Budget" : "Add Budget"}</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="AB-fields">
                         <label htmlFor="category">Category:</label>
@@ -148,7 +173,7 @@ function AddBudget({ budgets, setBudgets }) {
                         </select>
                     </div>
                     <div className="AB-button">
-                        <button type="submit">{location.state?.index !== undefined ? "Update Budget" : "Add Budget"}</button>
+                        <button type="submit">{location.state?.budget ? "Update Budget" : "Add Budget"}</button>
                     </div>
                 </form>
             </div>

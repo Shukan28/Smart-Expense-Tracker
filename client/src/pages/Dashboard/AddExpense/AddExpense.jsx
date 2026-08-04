@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import API from "../../../services/api";
 import "./AddExpense.css"
 
-function AddExpense({ expenses, setExpenses }) {
+function AddExpense() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    console.log(location.state);
 
     const [expense, setExpense] = useState({
-        id:"",
+        _id: "",
         expenseName: "",
         amount: "",
         category: "",
@@ -22,7 +22,16 @@ function AddExpense({ expenses, setExpenses }) {
 
     useEffect(() => {
         if (location.state?.expense) {
-            setExpense(location.state.expense);
+            const item = location.state.expense;
+            setExpense({
+                _id: item._id,
+                expenseName: item.title,
+                amount: item.amount,
+                category: item.category,
+                date: item.date ? item.date.split("T")[0] : "",
+                payment: item.payment,
+                notes: item.description,
+            });
         }
     }, [location.state]);
 
@@ -34,42 +43,73 @@ function AddExpense({ expenses, setExpenses }) {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem("token");
+        try {
+            let response;
+            if (location.state?.expense) {
+                response = await API.put(
+                    `/expenses/${expense._id}`,
+                    {
+                        title: expense.expenseName,
+                        amount: Number(expense.amount),
+                        category: expense.category,
+                        date: expense.date,
+                        payment: expense.payment,
+                        description: expense.notes,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+            } else {
+                response = await API.post(
+                    "/expenses",
+                    {
+                        title: expense.expenseName,
+                        amount: Number(expense.amount),
+                        category: expense.category,
+                        date: expense.date,
+                        payment: expense.payment,
+                        description: expense.notes,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+            }
 
-        const expenseData = {
-        ...expense,
-        id: location.state?.expense?.id || crypto.randomUUID()
-    };
-    
-        if (location.state?.expense) {
-            setExpenses(prev =>
-                prev.map(item =>
-    item.id === location.state.expense.id
-        ? expenseData : item
-                )
-            );
-        } else {
-            setExpenses(prev => [...prev, expenseData]);
+            alert(response.data.message);
+
+            setExpense({
+                _id: "",
+                expenseName: "",
+                amount: "",
+                category: "",
+                date: "",
+                payment: "",
+                notes: "",
+            });
+            navigate("/expensehistory");
+        } catch (error) {
+            console.error(error);
+            if (error.response) {
+                alert(error.response.data.message);
+            } else {
+                alert("Unable to connect to server.");
+            }
         }
-
-        setExpense({
-            id:"",
-            expenseName: "",
-            amount: "",
-            category: "",
-            date: "",
-            payment: "",
-            notes: "",
-        });
-
-        navigate("/expensehistory");
     };
 
     return (
         <section className="AE-container">
             <div className="AE-form">
-                <h2>{location.state?.index !== undefined ? "Edit Expense" : "Add Expense"}</h2>
+                <h2>{location.state?.expense ? "Edit Expense" : "Add Expense"}</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="fields"><label htmlFor="expname">Expense Name:</label>
                         <input
@@ -153,7 +193,7 @@ function AddExpense({ expenses, setExpenses }) {
                         />
                     </div>
                     <div className="AE-button">
-                        <button type="submit">{location.state?.index !== undefined ? "Update Expense" : "Add Expense"}</button>
+                        <button type="submit">{location.state?.expense ? "Update Expense" : "Add Expense"}</button>
                     </div>
                 </form>
             </div>

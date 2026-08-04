@@ -10,6 +10,8 @@ body {
   overflow-x: hidden;
 }
 
-main {
-  padding-top: 200px;
+@media (max-width: 768px) {
+  main {
+    padding-top: 200px;
+  }
 }

@@ -1,15 +1,49 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import API from "../../../services/api";
 import "./BudgetHistory.css"
 
-function BudgetHistory({ budgets, setBudgets, expenses }) {
+function BudgetHistory() {
 
     const navigate = useNavigate();
+    const [budgets, setBudgets] = useState([]);
+    const [expenses, setExpenses] = useState([]);
     const [search, setSearch] = useState("");
 
-    console.log("BudgetHistory received:", budgets);
-    console.log(search);
+    const fetchExpenses = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await API.get("/expenses", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setExpenses(response.data.expenses);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const fetchBudgets = async () => {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await API.get("/budget", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setBudgets(response.data.budgets);
+    } catch (error) {
+        console.error(error);
+        alert("Failed to fetch budgets.");
+    }
+};
+
+    useEffect(() => {
+        fetchExpenses();
+        fetchBudgets();
+    }, []);
 
     const filteredBudget = budgets.filter((item) => {
         const matchesSearch =
@@ -19,19 +53,26 @@ function BudgetHistory({ budgets, setBudgets, expenses }) {
         return matchesSearch
     });
 
-    const deleteBudget=(id)=>{
-    setBudgets(
-        budgets.filter(
-            item=>item.id!==id
-        )
-    );
-}
-
-    const handleDelete=(id)=>{
-    if(window.confirm("Delete this budget?")){
-        deleteBudget(id);
+   const handleDelete = async (id) => {
+    if (!window.confirm("Delete this budget?")) return;
+    try {
+        const token = localStorage.getItem("token");
+        await API.delete(`/budget/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        fetchBudgets();
+        alert("Budget deleted successfully.");
+    } catch (error) {
+        console.error(error);
+        if (error.response) {
+            alert(error.response.data.message);
+        } else {
+            alert("Unable to delete budget.");
+        }
     }
-}
+};
 
     return (
         <section className="BH-container">
@@ -62,7 +103,7 @@ function BudgetHistory({ budgets, setBudgets, expenses }) {
                                 .reduce((total, expense) => total + Number(expense.amount), 0);
                             const remaining = Number(item.amount) - spent;
                             return (
-                                <tr key={item.id}>
+                                <tr key={item._id}>
                                     <td>{item.month} {item.year}</td>
                                     <td>{item.category}</td>
                                     <td>₹{item.amount}</td>
@@ -76,7 +117,7 @@ function BudgetHistory({ budgets, setBudgets, expenses }) {
                                                     budget: item
                                                 },
                                             })}> Edit </button></td>
-                                    <td><button className="BH-delete-btn" onClick={()=>handleDelete(item.id)}> Delete </button></td>
+                                    <td><button className="BH-delete-btn" onClick={() => handleDelete(item._id)}> Delete </button></td>
                                 </tr>
                             );
                         })}

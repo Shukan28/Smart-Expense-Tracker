@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import API from "../../../services/api";
 import "./Analytics.css"
+
 import {
     PieChart,
     Pie,
@@ -14,7 +16,7 @@ import {
     ResponsiveContainer
 } from "recharts";
 
-function Analytics({ expenses, incomes, budgets }) {
+function Analytics() {
 
     const COLORS = [
         "#3B82F6",
@@ -40,6 +42,46 @@ function Analytics({ expenses, incomes, budgets }) {
         { month: "Nov", amount: 0 },
         { month: "Dec", amount: 0 },
     ];
+
+    const [expenses, setExpenses] = useState([]);
+    const [incomes, setIncomes] = useState([]);
+    const [budgets, setBudgets] = useState([]);
+
+    const fetchExpenses = async () => {
+        const token = localStorage.getItem("token");
+        const response = await API.get("/expenses", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setExpenses(response.data.expenses);
+    };
+
+    const fetchIncome = async () => {
+        const token = localStorage.getItem("token");
+        const response = await API.get("/income", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setIncomes(response.data.incomes);
+    };
+
+    const fetchBudgets = async () => {
+        const token = localStorage.getItem("token");
+        const response = await API.get("/budget", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setBudgets(response.data.budgets);
+    };
+
+    useEffect(() => {
+        fetchExpenses();
+        fetchIncome();
+        fetchBudgets();
+    }, []);
 
     expenses.forEach((expense) => {
         const month = new Date(expense.date).getMonth();
@@ -163,7 +205,7 @@ function Analytics({ expenses, incomes, budgets }) {
                 date.getFullYear() === currentYear
             );
         })
-        .reduce((sum, income) => sum + Number(income.amount), 0);
+        .reduce((sum, income) => sum + Number(income.salary), 0);
 
     const previousIncome = incomes
         .filter(income => {
@@ -173,7 +215,7 @@ function Analytics({ expenses, incomes, budgets }) {
                 date.getFullYear() === currentYear
             );
         })
-        .reduce((sum, income) => sum + Number(income.amount), 0);
+        .reduce((sum, income) => sum + Number(income.salary), 0);
 
     const incomeDifference = currentIncome - previousIncome;
 
@@ -185,7 +227,7 @@ function Analytics({ expenses, incomes, budgets }) {
             `▼ ₹${Math.abs(incomeDifference)} vs last month`
     }
 
-    const savingRate = (savings / totalIncome) * 100;
+    const savingRate = totalIncome > 0 ? (savings / totalIncome) * 100 : 0;
 
     let savingMessage = "";
 
@@ -290,8 +332,8 @@ function Analytics({ expenses, incomes, budgets }) {
                                 tickLine={false}
                                 axisLine={false}
                             />
-                            <Tooltip 
-                            contentStyle={{
+                            <Tooltip
+                                contentStyle={{
                                     backgroundColor: "#0F172A",
                                     border: "none",
                                     borderRadius: "12px",

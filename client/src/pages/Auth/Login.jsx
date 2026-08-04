@@ -1,65 +1,83 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import API from "../../services/api";
 import "./Login.css"
 
 function Login() {
 
     const navigate = useNavigate();
-    const savedUser = JSON.parse(localStorage.getItem("user"));
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+
     e.preventDefault();
+
     const formData = new FormData(e.target);
-    const username = formData.get("username");
+
+    const email = formData.get("email");
     const password = formData.get("password");
-    const savedUser = JSON.parse(localStorage.getItem("user"));
-    if (!savedUser) {
-        alert("No account found. Please register first.");
-        return;
+
+    try {
+
+        const response = await API.post("/auth/login", {
+            email,
+            password,
+        });
+
+        localStorage.setItem("token", response.data.token);
+
+        localStorage.setItem(
+            "user",
+            JSON.stringify(response.data.user)
+        );
+
+        alert(response.data.message);
+
+        navigate("/dashboard");
+
+    } catch (error) {
+
+        if (error.response) {
+            alert(error.response.data.message);
+        } else {
+            alert("Server not responding.");
+        }
+
     }
-    if (
-        username === savedUser.username &&
-        password === savedUser.password
-    ) {
-        localStorage.setItem("isLoggedIn", "true");
-        alert("Login Successful!");
-        navigate("/dashboard")
-    } else {
-        alert("Invalid Username or Password!");
-    }
+
 };
 
-    return ( 
+    return (
         <>
             <section className="log-container">
                 <div className="log-container-left">
-                <h2>Welcome Back!</h2>
-                <h3>Sign in to continue tracking your expenses.</h3>
-                <div className="log-card">
-                    <form onSubmit={handleSubmit}>
-                    <div className="form-grp">
-                        <label htmlFor="username">User Name:</label>
-                        <input type="text"
-                            name="username"
-                            placeholder="shu$an28"
-                            autoComplete="on"
-                            autoFocus
-                            required />
+                    <h2>Welcome Back!</h2>
+                    <h3>Sign in to continue tracking your expenses.</h3>
+                    <div className="log-card">
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-grp">
+                                <label htmlFor="email">Email Address:</label>
+                                <input type="email"
+                                    name="email"
+                                    placeholder="shukan@example.com"
+                                    autoComplete="on"
+                                    required
+                                    autoFocus
+                                />
                             </div>
                             <div className="form-grp">
-                        <label htmlFor="pw">Password:</label>
-                        <input type="password"
-                            name="password"
-                            placeholder="your secret"
-                            required />
+                                <label htmlFor="pw">Password:</label>
+                                <input type="password"
+                                    name="password"
+                                    placeholder="your secret"
+                                    required />
                             </div>
-                        <a href="fp" className="a">Forgot Password</a>
-                    <button type="submit" className="login">
-    Login
-</button>
-  </form>
-                </div>
+                            <a href="fp" className="a">Forgot Password</a>
+                            <button type="submit" className="login">
+                                Login
+                            </button>
+                        </form>
+                    </div>
                 </div>
                 <div className="divider"></div>
                 <div className="log-container-right">

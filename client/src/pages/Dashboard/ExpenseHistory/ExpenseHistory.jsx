@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, NavLink } from "react-router-dom";
+import API from "../../../services/api";
 import "./ExpenseHistory.css"
 
-function ExpenseHistory({ expenses, setExpenses }) {
+function ExpenseHistory() {
 
     const navigate = useNavigate();
+    const [expenses, setExpenses] = useState([]);
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("newest");
     const [category, setCategory] = useState("All Categories");
@@ -14,12 +15,29 @@ function ExpenseHistory({ expenses, setExpenses }) {
     console.log(search);
     console.log(category);
 
+    const fetchExpenses = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await API.get("/expenses", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setExpenses(response.data.expenses);
+        } catch (error) {
+            console.error(error);
+            alert("Failed to fetch expenses.");
+        }
+    };
+
+    useEffect(() => { fetchExpenses(); }, []);
+
     const totalExpense = expenses.reduce((total, item) => {
         return total + Number(item.amount);
     }, 0);
 
     const filteredExpenses = expenses.filter((item) => {
-        const matchesSearch = item.expenseName.toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase());
         const matchesCategory = category === "All Categories" || item.category === category;
         return matchesSearch && matchesCategory;
     });
@@ -40,17 +58,29 @@ function ExpenseHistory({ expenses, setExpenses }) {
         return 0;
     });
 
-    const deleteExpense = (id) => {
-        setExpenses(expenses.filter(item => item.id !== id));
-    };
-
-    const handleDelete = (id) => {
-        const confirmDelete =
-            window.confirm("Delete this income?");
-        if (confirmDelete) {
-            deleteExpense(id);
+    const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+        "Delete this expense?"
+    );
+    if (!confirmDelete) return;
+    try {
+        const token = localStorage.getItem("token");
+        await API.delete(`/expenses/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        fetchExpenses();
+        alert("Expense deleted successfully.");
+    } catch (error) {
+        console.error(error);
+        if (error.response) {
+            alert(error.response.data.message);
+        } else {
+            alert("Unable to delete expense.");
         }
-    };
+    }
+};
 
     return (
         <section className="EH-container">
@@ -103,9 +133,15 @@ function ExpenseHistory({ expenses, setExpenses }) {
                     </thead>
                     <tbody>
                         {sortedExpenses.map((item, index) => (
-                            <tr key={item.id}>
-                                <td>{item.date}</td>
-                                <td>{item.expenseName}</td>
+                            <tr key={item._id}>
+                                <td>
+                                    {new Date(item.date).toLocaleDateString("en-IN", {
+                                        day: "2-digit",
+                                        month: "short",
+                                        year: "numeric",
+                                    })}
+                                </td>
+                                <td>{item.title}</td>
                                 <td>{item.category}</td>
                                 <td>₹{item.amount}</td>
                                 <td>{item.payment}</td>
@@ -116,7 +152,7 @@ function ExpenseHistory({ expenses, setExpenses }) {
                                                 expense: item
                                             },
                                         })}> Edit </button></td>
-                                <td><button className="delete-btn" onClick={() => handleDelete(item.id)}> Delete </button></td>
+                                <td><button className="delete-btn" onClick={() => handleDelete(item._id)}> Delete </button></td>
                             </tr>
                         ))}
                     </tbody>

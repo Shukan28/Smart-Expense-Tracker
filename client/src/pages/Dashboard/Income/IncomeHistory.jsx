@@ -1,20 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import API from "../../../services/api";
 import "./IncomeHistory.css"
 
-function IncomeHistory({ incomes, setIncomes, setEditIncome }) {
+function IncomeHistory() {
 
     const navigate = useNavigate();
+    const [incomes, setIncomes] = useState([]);
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("newest");
     const [type, setType] = useState("All Types");
     const [source, setSource] = useState("All Sources");
 
-    console.log("IncomeHistory received:", incomes);
-    console.log(search);
-    console.log(type);
-    console.log(source);
+    const fetchIncome = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await API.get("/income", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setIncomes(response.data.incomes);
+        } catch (error) {
+            console.error(error);
+            alert("Failed to fetch income.");
+        }
+    };
+
+    useEffect(() => {
+        fetchIncome();
+    }, []);
 
     const totalIncome = incomes.reduce(
         (total, item) => total + Number(item.salary),
@@ -53,15 +69,25 @@ function IncomeHistory({ incomes, setIncomes, setEditIncome }) {
         return 0;
     });
 
-    const deleteIncome = (id) => {
-        setIncomes(incomes.filter(item => item.id !== id));
-    };
-
-    const handleDelete = (id) => {
-        const confirmDelete =
-            window.confirm("Delete this income?");
-        if (confirmDelete) {
-            deleteIncome(id);
+    const handleDelete = async (id) => {
+        const confirmDelete = window.confirm("Delete this income?");
+        if (!confirmDelete) return;
+        try {
+            const token = localStorage.getItem("token");
+            await API.delete(`/income/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            fetchIncome();
+            alert("Income deleted successfully.");
+        } catch (error) {
+            console.error(error);
+            if (error.response) {
+                alert(error.response.data.message);
+            } else {
+                alert("Unable to delete income.");
+            }
         }
     };
 
@@ -133,8 +159,14 @@ function IncomeHistory({ incomes, setIncomes, setEditIncome }) {
                     </thead>
                     <tbody>
                         {sortedIncome.map((item, index) => (
-                            <tr key={item.id}>
-                                <td>{item.date}</td>
+                            <tr key={item._id}>
+                                <td>
+                                    {new Date(item.date).toLocaleDateString("en-IN", {
+                                        day: "2-digit",
+                                        month: "short",
+                                        year: "numeric",
+                                    })}
+                                </td>
                                 <td>{item.source}</td>
                                 <td>{item.type}</td>
                                 <td>₹{item.salary}</td>
@@ -145,7 +177,7 @@ function IncomeHistory({ incomes, setIncomes, setEditIncome }) {
                                                 income: item
                                             },
                                         })}> Edit </button></td>
-                                <td><button className="IH-delete-btn" onClick={() => handleDelete(item.id)}> Delete </button></td>
+                                <td><button className="IH-delete-btn" onClick={() => handleDelete(item._id)}> Delete </button></td>
                             </tr>
                         ))}
                     </tbody>

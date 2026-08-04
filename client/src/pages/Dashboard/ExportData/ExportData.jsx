@@ -1,10 +1,11 @@
-import React from "react";
-import {jsPDF} from "jspdf";
+import React, { useState, useEffect } from "react";
+import { jsPDF } from "jspdf";
 import * as XLSX from "xlsx";
 import autoTable from "jspdf-autotable";
+import API from "../../../services/api";
 import "./ExportData.css"
 
-function ExportData({ expenses, incomes, budgets }) {
+function ExportData() {
 
     const exportExpensesCSV = () => {
 
@@ -23,12 +24,12 @@ function ExportData({ expenses, incomes, budgets }) {
         ];
 
         const rows = expenses.map((item) => [
-            item.expenseName,
+            item.title,
             item.amount,
             item.category,
             item.date,
             item.payment,
-            item.notes
+            item.description
         ]);
 
         const csvContent = [headers, ...rows]
@@ -174,12 +175,12 @@ function ExportData({ expenses, incomes, budgets }) {
         ];
 
         const expenseRows = expenses.map((item) => [
-            item.expenseName,
+            item.title,
             item.amount,
             item.category,
             item.date,
             item.payment,
-            item.notes
+            item.description
         ]);
 
         const incomeRows = incomes.map((item) => [
@@ -257,12 +258,12 @@ function ExportData({ expenses, incomes, budgets }) {
                 "Notes"
             ]],
             body: expenses.map((item) => [
-                item.expenseName,
+                item.title,
                 item.amount,
                 item.category,
                 item.date,
                 item.payment,
-                item.notes
+                item.description
             ])
         });
 
@@ -373,12 +374,12 @@ function ExportData({ expenses, incomes, budgets }) {
                 ]],
 
                 body: expenses.map((item) => [
-                    item.expenseName,
+                    item.title,
                     item.amount,
                     item.category,
                     item.date,
                     item.payment,
-                    item.notes
+                    item.description
                 ])
             });
 
@@ -442,6 +443,58 @@ function ExportData({ expenses, incomes, budgets }) {
         doc.save("Complete_Report.pdf");
     };
 
+    const [expenses, setExpenses] = useState([]);
+    const [incomes, setIncomes] = useState([]);
+    const [budgets, setBudgets] = useState([]);
+
+    const fetchExpenses = async () => {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await API.get("/expenses", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setExpenses(response.data.expenses);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const fetchIncome = async () => {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await API.get("/income", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setIncomes(response.data.incomes);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const fetchBudgets = async () => {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await API.get("/budget", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setBudgets(response.data.budgets);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+    useEffect(() => {
+        fetchExpenses();
+        fetchIncome();
+        fetchBudgets();
+    }, []);
+
     const exportExpensesExcel = () => {
 
         if (expenses.length === 0) {
@@ -450,12 +503,12 @@ function ExportData({ expenses, incomes, budgets }) {
         }
 
         const data = expenses.map((item) => ({
-            "Expense Name": item.expenseName,
+            "Expense Name": item.title,
             "Amount (₹)": item.amount,
             "Category": item.category,
             "Date": item.date,
             "Payment Method": item.payment,
-            "Notes": item.notes,
+            "Notes": item.description,
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(data);
@@ -537,12 +590,12 @@ function ExportData({ expenses, incomes, budgets }) {
         }
 
         const expenseData = expenses.map((item) => ({
-            "Expense Name": item.expenseName,
+            "Expense Name": item.title,
             "Amount (₹)": item.amount,
             "Category": item.category,
             "Date": item.date,
             "Payment Method": item.payment,
-            "Notes": item.notes,
+            "Notes": item.description,
         }));
 
         const incomeData = incomes.map((item) => ({
