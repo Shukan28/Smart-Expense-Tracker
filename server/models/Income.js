@@ -6,21 +6,35 @@ const incomeSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
+            index: true,
         },
 
         type: {
             type: String,
             required: true,
+            trim: true,
+            enum: [
+                "Job",
+                "Business",
+                "Internship",
+                "Investment",
+                "Freelancer",
+                "Interest",
+                "Gift",
+                "Other",
+            ],
         },
 
         source: {
             type: String,
             required: true,
+            trim: true,
         },
 
         salary: {
             type: Number,
             required: true,
+            min: 1,
         },
 
         date: {
@@ -30,6 +44,7 @@ const incomeSchema = new mongoose.Schema(
 
         description: {
             type: String,
+            trim: true,
             default: "",
         },
     },

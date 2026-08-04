@@ -1,16 +1,12 @@
 const Budget = require("../models/Budget");
 
-// CREATE
 const createBudget = async (req, res) => {
 
     try {
-
-        const {
-            month,
-            year,
-            category,
-            amount
-        } = req.body;
+        const month = req.body.month?.trim();
+        const year = Number(req.body.year);
+        const category = req.body.category?.trim();
+        const amount = Number(req.body.amount);
 
         if (!month || !year || !category || !amount) {
             return res.status(400).json({
@@ -18,7 +14,12 @@ const createBudget = async (req, res) => {
                 message: "Please fill all required fields.",
             });
         }
-
+        if (amount <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Budget amount must be greater than zero.",
+            });
+        }
         const budget = await Budget.create({
             user: req.user.id,
             month,
@@ -26,64 +27,63 @@ const createBudget = async (req, res) => {
             category,
             amount,
         });
-
         res.status(201).json({
             success: true,
             message: "Budget created successfully.",
             budget,
         });
-
     } catch (error) {
-
         console.error(error);
-
         res.status(500).json({
             success: false,
-            message: error.message,
+            message: "Internal server error.",
         });
-
     }
-
 };
 
-// GET
 const getBudgets = async (req, res) => {
-
     try {
-
         const budgets = await Budget.find({
             user: req.user.id,
         });
-
         res.status(200).json({
             success: true,
             count: budgets.length,
             budgets,
         });
-
     } catch (error) {
-
         console.error(error);
-
         res.status(500).json({
             success: false,
-            message: error.message,
+            message: "Internal server error.",
         });
-
     }
-
 };
 
-// UPDATE
 const updateBudget = async (req, res) => {
-
     try {
 
+        const month = req.body.month?.trim();
+        const year = Number(req.body.year);
+        const category = req.body.category?.trim();
+        const amount = Number(req.body.amount);
+
+        if (!month || !year || !category || !amount) {
+            return res.status(400).json({
+                success: false,
+                message: "Please fill all required fields.",
+            });
+        }
+        if (amount <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Budget amount must be greater than zero.",
+            });
+        }
         const budget = await Budget.findOne({
             _id: req.params.id,
             user: req.user.id,
         });
-
         if (!budget) {
             return res.status(404).json({
                 success: false,
@@ -91,71 +91,50 @@ const updateBudget = async (req, res) => {
             });
         }
 
-        budget.month = req.body.month;
-        budget.year = req.body.year;
-        budget.category = req.body.category;
-        budget.amount = req.body.amount;
+        budget.month = month;
+        budget.year = year;
+        budget.category = category;
+        budget.amount = amount;
 
         await budget.save();
-
         res.status(200).json({
             success: true,
             message: "Budget updated successfully.",
             budget,
         });
-
     } catch (error) {
-
         console.error(error);
-
         res.status(500).json({
             success: false,
-            message: error.message,
+            message: "Internal server error.",
         });
-
     }
-
 };
 
-// DELETE
 const deleteBudget = async (req, res) => {
-
     try {
-
-        const budget = await Budget.findById(req.params.id);
-
+        const budget = await Budget.findOne({
+            _id: req.params.id,
+            user: req.user.id,
+        });
         if (!budget) {
             return res.status(404).json({
                 success: false,
                 message: "Budget not found.",
             });
         }
-
-        if (budget.user.toString() !== req.user.id) {
-            return res.status(403).json({
-                success: false,
-                message: "Unauthorized.",
-            });
-        }
-
         await budget.deleteOne();
-
         res.status(200).json({
             success: true,
             message: "Budget deleted successfully.",
         });
-
     } catch (error) {
-
         console.error(error);
-
         res.status(500).json({
             success: false,
-            message: error.message,
+            message: "Internal server error.",
         });
-
     }
-
 };
 
 module.exports = {

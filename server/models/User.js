@@ -6,12 +6,15 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true,
+            minlength: 3,
+            maxlength: 30,
         },
 
         email: {
             type: String,
             required: true,
             unique: true,
+            index: true,
             lowercase: true,
             trim: true,
         },
@@ -19,7 +22,7 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: true,
-            minlength: 6,
+            minlength: 8,
         },
     },
     {
